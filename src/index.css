@@ -1,1 +1,126 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+@theme {
+  --font-sans: 'Noto Sans KR', sans-serif;
+
+  /* Color System */
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-white-body: color-mix(in srgb, #ffffff 75%, transparent);
+  --color-red: #f84e4e;
+  --color-blue-primary: #1670fb;
+  --color-blue-dim: #0d4db5;
+  --color-blue-mint: #91f8ff;
+  --color-navy-deep: #05265a;
+
+  /* Text Color */
+  --color-text-primary: #ffffff;
+  --color-text-body: color-mix(in srgb, #ffffff 75%, transparent);
+}
+
+@layer components {
+  .title-xl {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .title-l {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .title-m {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .title-s {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .body1 {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .body2 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 160%;
+    letter-spacing: 0px;
+  }
+
+  .body3 {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0px;
+  }
+
+  .button {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .caption {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
+
+  .mobile-title-xl {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0px;
+  }
+
+  .mobile-title-l {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0px;
+  }
+
+  .mobile-title-m {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0px;
+  }
+
+  .mobile-body-xl {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 160%;
+    letter-spacing: 0px;
+  }
+
+  .mobile-body-l {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 160%;
+    letter-spacing: 0px;
+  }
+
+  .mobile-body-m {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 160%;
+    letter-spacing: 0px;
+  }
+}
