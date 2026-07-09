@@ -3,6 +3,11 @@
 @theme {
   --font-sans: 'Noto Sans KR', sans-serif;
 
+  /* breakpoints */
+  --breakpoint-sm: 393px; /* 모바일 */
+  --breakpoint-md: 1024px; /* 태블릿 */
+  --breakpoint-lg: 1992px; /* 데스크탑 */
+
   /* Color System */
   --color-black: #000000;
   --color-white: #ffffff;
