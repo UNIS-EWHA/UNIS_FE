@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import UnisLogo from '@/assets/ic_unis_logo_48.svg';
+import MenuItem from './components/MenuItem';
 
 function Button({ name, color, onClick }) {
   return (
@@ -28,33 +29,23 @@ function DesktopNav() {
 
       <div className="flex items-center gap-[79.5px]">
         <ul className="flex items-center gap-18 title-s text-white">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/activity">Activity</Link>
-          </li>
-          <li>
-            <Link to="/project">Project</Link>
-          </li>
-          <li>
-            <Link to="/community">Community</Link>
-          </li>
+          <MenuItem name="Home" path="/" />
+          <MenuItem name="About" path="/about" />
+          <MenuItem name="Activity" path="/activity" />
+          <MenuItem name="Project" path="/project" />
+          <MenuItem name="Community" path="/community" />
         </ul>
 
         <div className="flex items-center gap-4">
           <Button
             name="로그인"
             color="var(--color-white)"
-            onClick={() => useNavigate('/login')}
+            onClick={() => navigate('/login')}
           />
           <Button
             name="지원하기"
             color="var(--color-blue-mint)"
-            onClick={() => useNavigate('/application')}
+            onClick={() => navigate('/application')}
           />
         </div>
       </div>
