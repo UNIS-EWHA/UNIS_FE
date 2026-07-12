@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import GNB from '@/components/GNB/index.jsx';
 import Login from '@/pages/Login';
+import FindPassword from './pages/FindPassword';
 import SignUp from '@/pages/SignUp';
 import About from '@/pages/About';
 import Activity from './pages/Activity';
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/find-password" element={<FindPassword />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/about" element={<About />} />
         <Route path="/activity" element={<Activity />} />
