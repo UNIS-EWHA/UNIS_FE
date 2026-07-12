@@ -6,6 +6,7 @@ import About from '@/pages/About';
 import Activity from './pages/Activity';
 import Home from '@/pages/Home';
 import Project from '@/pages/Project';
+import ProjectDetail from './pages/ProjectDetail';
 import Community from './pages/Community';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/activity" element={<Activity />} />
         <Route path="/project" element={<Project />} />
+        <Route path="/project/:id" element={<ProjectDetail />} />
         <Route path="/community" element={<Community />} />
       </Routes>
     </BrowserRouter>
