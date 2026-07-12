@@ -8,6 +8,7 @@ import Home from '@/pages/Home';
 import Project from '@/pages/Project';
 import ProjectDetail from './pages/ProjectDetail';
 import Community from './pages/Community';
+import Community1Detail from '@/pages/Community1Detail';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/project" element={<Project />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/community/:id" element={<Community1Detail />} />
       </Routes>
     </BrowserRouter>
   );
