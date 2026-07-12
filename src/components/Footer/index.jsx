@@ -1,6 +1,8 @@
 import FooterImage from '@/assets/img_footer.png';
+import { useNavigate } from 'react-router-dom';
 
 function Footer() {
+  const navigate = useNavigate();
   return (
     <div className="relative w-full aspect-16/7">
       {/* 배경 이미지 */}
