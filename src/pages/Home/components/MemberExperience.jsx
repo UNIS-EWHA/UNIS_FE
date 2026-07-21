@@ -1,23 +1,5 @@
-const stories = [
-  {
-    name: '학회원',
-    role: '7기 디자인',
-    content:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
-  },
-  {
-    name: '학회원',
-    role: '7기 디자인',
-    content:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
-  },
-  {
-    name: '학회원',
-    role: '7기 디자인',
-    content:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
-  },
-];
+import { useEffect, useState } from 'react';
+import { getHomeTestimonials } from '@/api/home';
 
 function StoryCard({ name, role, content }) {
   return (
@@ -34,6 +16,14 @@ function StoryCard({ name, role, content }) {
 }
 
 function MemberExperience() {
+  const [stories, setStories] = useState([]);
+
+  useEffect(() => {
+    getHomeTestimonials()
+      .then((res) => setStories(res.data))
+      .catch(() => setStories([]));
+  }, []);
+
   return (
     <div className="px-5 md:px-15 lg:px-45">
       <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2">
@@ -44,8 +34,8 @@ function MemberExperience() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        {stories.map((story, index) => (
-          <StoryCard key={index} {...story} />
+        {stories.map((story) => (
+          <StoryCard key={story.testimonialId} {...story} />
         ))}
       </div>
     </div>
