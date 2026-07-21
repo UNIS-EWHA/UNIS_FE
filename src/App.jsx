@@ -10,6 +10,7 @@ import Project from '@/pages/Project';
 import ProjectDetail from './pages/ProjectDetail';
 import Community from './pages/Community';
 import Community1Detail from '@/pages/Community1Detail';
+import Application from './pages/Application';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/project/:id" element={<ProjectDetail />} />
         <Route path="/community" element={<Community />} />
         <Route path="/community/:id" element={<Community1Detail />} />
+        <Route path="/application" element={<Application />} />
       </Routes>
     </BrowserRouter>
   );
