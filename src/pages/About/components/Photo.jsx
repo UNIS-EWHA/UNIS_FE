@@ -1,10 +1,3 @@
-const photoCards = [
-  { title: 'OT & 팀빌딩', image: null },
-  { title: '아이디어톤', image: null },
-  { title: 'MT', image: null },
-  { title: '데모데이', image: null },
-];
-
 function PhotoCard({ title, image }) {
   return (
     <div className="w-full border border-white/20 rounded-[10px] ronded-[20px] overflow-hidden relative">
@@ -21,7 +14,7 @@ function PhotoCard({ title, image }) {
   );
 }
 
-function Photo() {
+function Photo({ photos }) {
   return (
     <div className="px-5 md:px-15 lg:px-45">
       <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] lg:font-[500] leading-normal tracking-[0%] mb-2 lg:mb-4">
@@ -32,8 +25,12 @@ function Photo() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-        {photoCards.map((card, index) => (
-          <PhotoCard key={index} {...card} />
+        {photos.map((photo) => (
+          <PhotoCard
+            key={photo.photoId}
+            title={photo.label}
+            image={photo.imageUrl}
+          />
         ))}
       </div>
     </div>

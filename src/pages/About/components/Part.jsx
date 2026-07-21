@@ -35,38 +35,14 @@ function PartCard({ icon, title, description, tags }) {
   );
 }
 
-const partCards = [
-  {
-    icon: PlanningIcon,
-    title: '기획',
-    description:
-      '사용자의 문제를 발견하고, 이를 해결할 수 있는 서비스 구조와 방향성을 설계합니다. 아이디어를 구체화하며 기능 기획, 사용자 흐름 설계, 서비스 전략 수립, 마케팅 등을 담당합니다.',
-    tags: ['프로덕트 기획', '프로젝트 관리'],
-  },
-  {
-    icon: DesignIcon,
-    title: '디자인',
-    description:
-      '사용자 경험을 중심으로 서비스의 화면과 브랜드 경험을 디자인합니다. 직관적인 UI와 일관된 디자인 시스템을 통해 서비스를 더 매력적이고 사용하기 쉽게 만듭니다.',
-    tags: ['Figma 활용', 'UIUX 디자인'],
-  },
-  {
-    icon: FrontendIcon,
-    title: '프론트엔드',
-    description:
-      '사용자가 직접 마주하는 웹·앱 화면을 구현하며, 서비스의 사용자 경험을 완성합니다. 기획과 디자인을 실제 인터페이스로 구현하여 직관적이고 자연스러운 사용 흐름을 만듭니다.',
-    tags: ['UI 구현', '인터렉션 구현'],
-  },
-  {
-    icon: BackendIcon,
-    title: '백엔드',
-    description:
-      '서비스가 안정적으로 운영될 수 있도록 서버와 데이터 구조를 설계하고 개발합니다. 사용자 데이터 관리, API 개발, 데이터베이스 설계, 서버 로직 구현 등을 담당합니다.',
-    tags: ['데이터 구조', 'API 구현'],
-  },
-];
+const partIcons = {
+  기획: PlanningIcon,
+  디자인: DesignIcon,
+  프론트엔드: FrontendIcon,
+  백엔드: BackendIcon,
+};
 
-function Part() {
+function Part({ parts }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
     containScroll: false,
@@ -91,20 +67,25 @@ function Part() {
 
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {partCards.map((card, index) => (
+          {parts.map((part, index) => (
             <div
-              key={index}
+              key={part.name}
               className="flex-none w-[85%] md:w-[45%] lg:w-[32%] pr-3 lg:pr-6"
               onClick={() => emblaApi && emblaApi.scrollTo(index)}
             >
-              <PartCard {...card} />
+              <PartCard
+                icon={partIcons[part.name]}
+                title={part.name}
+                description={part.description}
+                tags={part.tags}
+              />
             </div>
           ))}
         </div>
       </div>
 
       <div className="flex items-center justify-center gap-2 mt-6">
-        {partCards.map((_, index) => (
+        {parts.map((_, index) => (
           <div
             key={index}
             className={`h-2 rounded-full transition-all duration-300 ${
