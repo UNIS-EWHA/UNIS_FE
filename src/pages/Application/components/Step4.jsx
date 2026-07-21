@@ -1,7 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 
-function Step4() {
+function formatAnnounceDate(iso) {
+  if (!iso) return null;
+  const date = new Date(iso);
+  return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}. ${date.getHours()}시`;
+}
+
+function Step4({ submitResult }) {
   const navigate = useNavigate();
+  const announceDate = formatAnnounceDate(submitResult?.resultAnnounceAt);
 
   return (
     <div className="flex flex-col items-center lg:gap-20">
@@ -33,7 +40,7 @@ function Step4() {
             지원서가 등록되었습니다.
           </p>
           <p className="text-white-body text-[12px] md:text-[14px] leading-[160%]">
-            서류 결과는 2026.7.30. 18시에 이메일로 발송됩니다.
+            {announceDate && `서류 결과는 ${announceDate}에 이메일로 발송됩니다.`}
             <br />
             지원해 주셔서 감사합니다.
           </p>

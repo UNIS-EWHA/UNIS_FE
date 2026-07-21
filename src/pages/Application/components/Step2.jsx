@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ProgressBar from './ProgressBar';
+import { uploadPortfolio } from '@/api/application';
 
 const questions = [
   {
@@ -44,14 +45,43 @@ function Step2({ formData, onNext, onBack }) {
     q3: formData.q3 || '',
     q4: formData.q4 || '',
   });
-  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState('');
+  const [portfolioUrl, setPortfolioUrl] = useState(formData.portfolioUrl || '');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   const handleChange = (id, value) => {
     setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleFileSelect = async (file) => {
+    if (!file) return;
+    setUploadError('');
+    try {
+      setIsUploading(true);
+      const res = await uploadPortfolio(file);
+      setPortfolioUrl(res.data.fileUrl);
+      setFileName(res.data.fileName);
+    } catch (error) {
+      setUploadError(
+        error.response?.data?.detail ??
+          error.response?.data?.message ??
+          '파일 업로드에 실패했습니다.',
+      );
+      setFileName('');
+      setPortfolioUrl('');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleLinkChange = (value) => {
+    setFileName('');
+    setPortfolioUrl(value);
+  };
+
   const handleNext = () => {
-    onNext({ ...answers, portfolio: file });
+    onNext({ ...answers, portfolioUrl });
   };
 
   return (
@@ -123,16 +153,30 @@ function Step2({ formData, onNext, onBack }) {
                 제출해주세요.
               </p>
               <label className="w-full py-3 border border-white/20 rounded-[8px] text-white text-[12px] lg:text-[14px] text-center cursor-pointer bg-white/10">
-                파일 첨부
+                {isUploading ? '업로드 중...' : '파일 첨부'}
                 <input
                   type="file"
+                  accept=".pdf,.txt"
+                  disabled={isUploading}
                   className="hidden"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) => handleFileSelect(e.target.files[0])}
                 />
               </label>
-              {file && (
-                <p className="text-white-body text-[12px]">{file.name}</p>
+              {fileName && (
+                <p className="text-white-body text-[12px]">{fileName}</p>
               )}
+              {uploadError && (
+                <p className="text-red-500 text-[12px]">{uploadError}</p>
+              )}
+              <p className="text-white-body text-[11px]">또는 링크로 제출</p>
+              <input
+                type="text"
+                value={fileName ? '' : portfolioUrl}
+                disabled={!!fileName}
+                onChange={(e) => handleLinkChange(e.target.value)}
+                placeholder="노션, 구글 드라이브, 깃허브 등 외부 링크를 입력해주세요."
+                className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none disabled:opacity-50"
+              />
             </div>
           ) : (
             <div key={q.id} className="flex flex-col gap-2">

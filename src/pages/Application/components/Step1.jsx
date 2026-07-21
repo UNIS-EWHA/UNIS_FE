@@ -1,6 +1,13 @@
 import { useState } from 'react';
+import { checkStudentId } from '@/api/application';
 
 const parts = ['기획', '디자인', '프론트엔드', '백엔드'];
+const partCodes = {
+  기획: 'PLANNING',
+  디자인: 'DESIGN',
+  프론트엔드: 'FRONTEND',
+  백엔드: 'BACKEND',
+};
 
 function ProgressBar({ currentStep }) {
   const steps = ['인적사항', '세부 정보', '확인 및 제출'];
@@ -40,15 +47,64 @@ function ProgressBar({ currentStep }) {
   );
 }
 
-function Step1({ formData, onNext }) {
+function Step1({ formData, recruitInfo, onNext }) {
   const [name, setName] = useState(formData.name || '');
+  const [phone, setPhone] = useState(formData.phone || '');
   const [studentId, setStudentId] = useState(formData.studentId || '');
-  const [email, setEmail] = useState(formData.email || '');
-  const [major, setMajor] = useState(formData.major || '');
+  const [department, setDepartment] = useState(formData.department || '');
   const [selectedPart, setSelectedPart] = useState(formData.part || '');
+  const [isStudentIdAvailable, setIsStudentIdAvailable] = useState(false);
+  const [isCheckingStudentId, setIsCheckingStudentId] = useState(false);
+  const [studentIdMessage, setStudentIdMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleCheckStudentId = async () => {
+    if (!studentId) {
+      setStudentIdMessage('학번을 입력해주세요.');
+      return;
+    }
+    setStudentIdMessage('');
+    try {
+      setIsCheckingStudentId(true);
+      const res = await checkStudentId(studentId);
+      setIsStudentIdAvailable(res.data.available);
+      setStudentIdMessage(
+        res.data.available
+          ? '지원 가능한 학번입니다.'
+          : '이미 지원한 학번입니다.',
+      );
+    } catch (error) {
+      setIsStudentIdAvailable(false);
+      setStudentIdMessage(
+        error.response?.data?.detail ??
+          error.response?.data?.message ??
+          '중복 확인에 실패했습니다.',
+      );
+    } finally {
+      setIsCheckingStudentId(false);
+    }
+  };
 
   const handleNext = () => {
-    onNext({ name, studentId, email, major, part: selectedPart });
+    setErrorMessage('');
+
+    if (!name || !phone || !studentId || !department || !selectedPart) {
+      setErrorMessage('필수 항목을 모두 입력해주세요.');
+      return;
+    }
+    if (!isStudentIdAvailable) {
+      setErrorMessage('학번 중복 확인을 완료해주세요.');
+      return;
+    }
+
+    onNext({
+      name,
+      phone,
+      studentId,
+      department,
+      part: selectedPart,
+      partCode: partCodes[selectedPart],
+    });
   };
 
   return (
@@ -104,6 +160,20 @@ function Step1({ formData, onNext }) {
 
         <ProgressBar currentStep={1} />
 
+        {recruitInfo && (
+          <div className="border border-white/20 rounded-[8px] px-4 py-3 flex flex-col gap-1">
+            <p className="text-white text-[12px] lg:text-[14px] font-[600]">
+              {recruitInfo.generation}기 모집{' '}
+              {recruitInfo.status === 'OPEN' ? '중' : '마감'} · 정원{' '}
+              {recruitInfo.capacity}명
+            </p>
+            <p className="text-white-body text-[11px] lg:text-[12px]">
+              전형 일정: {recruitInfo.schedule} · 지원 마감:{' '}
+              {recruitInfo.endDate}
+            </p>
+          </div>
+        )}
+
         <p className="hidden lg:block text-white text-[16px] font-[600] mb-2">
           Step1. 인적사항
           <br />
@@ -131,24 +201,39 @@ function Step1({ formData, onNext }) {
           <p className="text-white text-[12px] lg:text-[14px] font-[500]">
             학번
           </p>
-          <input
-            type="text"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            placeholder="학번을 입력해주세요."
-            className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none"
-          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={studentId}
+              onChange={(e) => {
+                setStudentId(e.target.value);
+                setIsStudentIdAvailable(false);
+              }}
+              placeholder="학번을 입력해주세요."
+              className="flex-1 bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none"
+            />
+            <button
+              onClick={handleCheckStudentId}
+              disabled={isCheckingStudentId}
+              className="shrink-0 bg-white text-black text-[12px] px-3 py-2 rounded-[8px] disabled:opacity-50"
+            >
+              {isCheckingStudentId ? '확인 중...' : '중복 확인'}
+            </button>
+          </div>
+          {studentIdMessage && (
+            <p className="text-[12px] text-blue-primary">{studentIdMessage}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
           <p className="text-white text-[12px] lg:text-[14px] font-[500]">
-            이메일
+            전화번호
           </p>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일을 입력해주세요."
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="전화번호를 입력해주세요."
             className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none"
           />
         </div>
@@ -159,8 +244,8 @@ function Step1({ formData, onNext }) {
           </p>
           <input
             type="text"
-            value={major}
-            onChange={(e) => setMajor(e.target.value)}
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
             placeholder="현재 전공 또는 복수 전공 중인 학과 이름을 입력해주세요."
             className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none"
           />
@@ -186,6 +271,10 @@ function Step1({ formData, onNext }) {
             ))}
           </div>
         </div>
+
+        {errorMessage && (
+          <p className="text-red-500 text-[12px] text-center">{errorMessage}</p>
+        )}
 
         <button
           onClick={handleNext}
