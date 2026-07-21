@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+
 const activities = [
   {
     image: null,
@@ -20,9 +22,27 @@ const activities = [
 ];
 
 function ActivityItem({ image, title, description, isEven }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
-      className={`flex flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''} gap-4 md:gap-10 lg:gap-20`}
+      ref={ref}
+      className={`flex flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''} gap-4 md:gap-10 lg:gap-20
+        ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
     >
       <div className="w-full md:w-2/5 aspect-[16/9] bg-white/10 rounded-[10px] lg:rounded-[20px] overflow-hidden">
         {image && (

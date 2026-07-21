@@ -28,7 +28,9 @@ function FaqItem({ question, answer }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-b-[0.5px] lg:border-b-[1px] border-white-body">
+    <div
+      className={`${isOpen ? '' : 'border-b border-b-[0.5px] lg:border-b-[1px] border-white-body'}`}
+    >
       <button
         className="w-full flex items-center justify-between px-2 py-3 lg:px-4 lg:py-8 text-white text-left"
         onClick={() => setIsOpen(!isOpen)}
@@ -43,13 +45,17 @@ function FaqItem({ question, answer }) {
         />
       </button>
 
-      {isOpen && (
+      <div
+        className={`overflow-hidden transition-all duration-700 ease-in-out ${
+          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
         <div className="border border-white/20 bg-white/10 backdrop-blur-[50px] p-4 mb-4 lg:px-8 lg:py-13.5 lg:mb-8">
           <p className="text-white text-[12px] md:text-[14px] lg:text-[24px] leading-[150%]">
             {answer}
           </p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
