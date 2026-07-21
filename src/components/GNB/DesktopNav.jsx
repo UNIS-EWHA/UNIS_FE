@@ -1,6 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import UnisLogo from '@/assets/ic_unis_logo_48.svg';
 import MenuItem from './components/MenuItem';
+import useAuthStore from '@/store/authStore';
+import { logout } from '@/api/auth';
 
 function Button({ name, color, onClick }) {
   return (
@@ -15,6 +17,22 @@ function Button({ name, color, onClick }) {
 }
 function DesktopNav() {
   const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+
+  const handleAuthClick = async () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await logout();
+    } catch {
+    } finally {
+      clearAuth();
+      navigate('/login');
+    }
+  };
 
   return (
     <nav className="flex items-center justify-between pl-[157px] pr-[79px] py-[26px] bg-[#001C3F]/20 backdrop-blur-[50px] border-b border-b-white/10">
@@ -38,9 +56,9 @@ function DesktopNav() {
 
         <div className="flex items-center gap-4">
           <Button
-            name="로그인"
+            name={isLoggedIn ? '로그아웃' : '로그인'}
             color="var(--color-white)"
-            onClick={() => navigate('/login')}
+            onClick={handleAuthClick}
           />
           <Button
             name="지원하기"

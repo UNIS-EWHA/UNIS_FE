@@ -1,12 +1,45 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FindPassword from '../FindPassword';
+import { login } from '@/api/auth';
+import useAuthStore from '@/store/authStore';
 
 function Login() {
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleLogin = async () => {
+    setErrorMessage('');
+
+    if (!id || !password) {
+      setErrorMessage('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const res = await login({
+        loginId: id,
+        password,
+        keepLogin: rememberMe,
+      });
+      setAuth(res.data);
+      navigate('/');
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.detail ??
+          error.response?.data?.message ??
+          '로그인에 실패했습니다.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className=" flex mt-8 lg:mt-16 justify-center px-5">
@@ -62,9 +95,17 @@ function Login() {
             비밀번호 찾기
           </button>
         </div>
+        {errorMessage && (
+          <p className="text-red-500 text-[12px] text-center">{errorMessage}</p>
+        )}
+
         <div className="flex flex-col gap-4">
-          <button className="w-full py-3 bg-white text-black text-[14px] lg:text-[16px] font-[700] rounded-[8px]">
-            로그인
+          <button
+            onClick={handleLogin}
+            disabled={isSubmitting}
+            className="w-full py-3 bg-white text-black text-[14px] lg:text-[16px] font-[700] rounded-[8px] disabled:opacity-50"
+          >
+            {isSubmitting ? '로그인 중...' : '로그인'}
           </button>
           <button
             onClick={() => navigate('/signup')}

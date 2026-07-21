@@ -10,3 +10,9 @@ export const verifyEmailCode = (email, code) =>
 
 export const checkLoginId = (loginId) =>
   api.get("/auth/login-id/check", { params: { "login-id": loginId } });
+
+export const login = (payload) => api.post("/auth/login", payload);
+
+export const reissue = () => api.post("/auth/reissue");
+
+export const logout = () => api.post("/auth/logout");
