@@ -4,10 +4,29 @@ import UnisLogo from '@/assets/ic_unis_logo_48.svg';
 import MenuIcon from '@/assets/ic_menu_33.svg';
 import ChevronRightIcon from '@/assets/ic_chevron_right.svg';
 import MenuItem from './components/MenuItem';
+import useAuthStore from '@/store/authStore';
+import { logout } from '@/api/auth';
 
 function MobileNav() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+
+  const handleAuthClick = async () => {
+    setIsOpen(false);
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await logout();
+    } catch {
+    } finally {
+      clearAuth();
+      navigate('/login');
+    }
+  };
 
   return (
     <>
@@ -35,15 +54,16 @@ function MobileNav() {
 
       {isOpen && (
         <>
-          <div className="fixed top-0 left-0 right-0 z-50 bg-[#000000]/80 backdrop-blur-[50px] px-5 py-20 md:px-15 animate-slide-down">
-            <Link to="/login" onClick={() => setIsOpen(false)}>
-              <div className="flex items-center gap-[13px]">
-                <p className="text-[18px] font-[700] leading-normal tracking-0 text-white md:text-[20px]">
-                  로그인
-                </p>
-                <img src={ChevronRightIcon} alt="chevron right icon" />
-              </div>
-            </Link>
+          <div className="fixed top-0 left-0 right-0 z-50 bg-[#000000]/80 backdrop-blur-[50px] px-5 py-20 md:px-15">
+            <button
+              onClick={handleAuthClick}
+              className="flex items-center gap-[13px]"
+            >
+              <p className="text-[18px] font-[700] leading-normal tracking-0 text-white md:text-[20px]">
+                {isLoggedIn ? '로그아웃' : '로그인'}
+              </p>
+              <img src={ChevronRightIcon} alt="chevron right icon" />
+            </button>
 
             <hr className="border-white-body mt-6 mb-6" />
 
