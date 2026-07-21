@@ -1,7 +1,24 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 
 function Hero() {
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+  const lineRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (lineRef.current) observer.observe(lineRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-5 relative">
@@ -29,8 +46,18 @@ function Hero() {
           당신의 반짝이는 열정은 세상을 바꿀 빛이 됩니다.
         </p>
       </div>
-
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-white/20" />
+      <div
+        ref={lineRef}
+        className="flex justify-center mt-16 h-[80px] md:h-[100px] lg:h-[120px]"
+      >
+        <div
+          className={`w-[1px] ${isVisible ? 'animate-draw-line' : 'h-0'}`}
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.3))',
+          }}
+        />
+      </div>
     </div>
   );
 }

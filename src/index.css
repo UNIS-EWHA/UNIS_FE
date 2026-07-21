@@ -144,3 +144,48 @@ body {
   min-height: 100vh;
   background: linear-gradient(to bottom, #000000 0%, #05265a 74%);
 }
+
+@keyframes drawLineSm {
+  from {
+    height: 0;
+  }
+  to {
+    height: 150px;
+  }
+}
+
+@keyframes drawLineMd {
+  from {
+    height: 0;
+  }
+  to {
+    height: 250px;
+  }
+}
+
+@keyframes drawLineLg {
+  from {
+    height: 0;
+  }
+  to {
+    height: 400px;
+  }
+}
+
+@layer utilities {
+  .animate-draw-line {
+    animation: drawLineSm 1.5s ease-out forwards;
+  }
+
+  @media (min-width: 768px) {
+    .animate-draw-line {
+      animation: drawLineMd 1.5s ease-out forwards;
+    }
+  }
+
+  @media (min-width: 1510px) {
+    .animate-draw-line {
+      animation: drawLineLg 1.5s ease-out forwards;
+    }
+  }
+}
