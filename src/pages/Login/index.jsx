@@ -62,10 +62,17 @@ function Login() {
             비밀번호 찾기
           </button>
         </div>
-
-        <button className="w-full py-3 bg-white text-black text-[14px] lg:text-[16px] font-[700] rounded-[8px]">
-          로그인
-        </button>
+        <div className="flex flex-col gap-4">
+          <button className="w-full py-3 bg-white text-black text-[14px] lg:text-[16px] font-[700] rounded-[8px]">
+            로그인
+          </button>
+          <button
+            onClick={() => navigate('/signup')}
+            className="w-full py-3 text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px] border border-white"
+          >
+            회원가입
+          </button>
+        </div>
       </div>
     </div>
   );
