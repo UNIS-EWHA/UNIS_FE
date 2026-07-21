@@ -10,6 +10,8 @@ import Project from '@/pages/Project';
 import ProjectDetail from './pages/ProjectDetail';
 import Community from './pages/Community';
 import Community1Detail from '@/pages/Community1Detail';
+import PostForm from './pages/Community/components/PostForm';
+import PostComplete from './pages/Community/components/PostForm/PostComplete';
 import Application from './pages/Application';
 
 function App() {
@@ -26,7 +28,9 @@ function App() {
         <Route path="/project" element={<Project />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/community/write" element={<PostForm />} />
         <Route path="/community/:id" element={<Community1Detail />} />
+        <Route path="/community/complete" element={<PostComplete />} />
         <Route path="/application" element={<Application />} />
       </Routes>
     </BrowserRouter>

@@ -38,10 +38,14 @@ function Community1({
   defaultCount,
   totalCount,
 }) {
+  const navigate = useNavigate();
   return (
     <div>
       <div className="flex justify-end md:mb-5">
-        <button className="hidden md:block border border-white text-white text-[16px] px-6 py-2 rounded-full">
+        <button
+          onClick={() => navigate('/community/write')}
+          className="hidden md:block border border-white text-white text-[16px] px-6 py-2 rounded-full"
+        >
           게시글 작성
         </button>
       </div>
@@ -63,7 +67,10 @@ function Community1({
           </button>
         )}
       </div>
-      <button className="md:hidden fixed bottom-8 right-8 w-12 h-12 bg-blue-primary rounded-full text-white text-[24px] flex items-center justify-center z-50">
+      <button
+        onClick={() => navigate('/community/write')}
+        className="md:hidden fixed bottom-8 right-8 w-12 h-12 bg-blue-primary rounded-full text-white text-[24px] flex items-center justify-center z-50"
+      >
         +
       </button>
     </div>
