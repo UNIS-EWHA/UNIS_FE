@@ -1,24 +1,39 @@
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { projects } from '@/data/projects';
+import { useEffect, useState } from 'react';
 import Tag from '@/components/Tag';
 import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
 import FilledBookmarkIcon from '@/assets/ic_filled_bookmark_40.svg';
+import { getProjectDetail } from '@/api/project';
+
+const partLabels = {
+  PLANNING: '기획',
+  DESIGN: '디자인',
+  FRONTEND: '프론트엔드',
+  BACKEND: '백엔드',
+};
 
 function ProjectDetail() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const { id } = useParams();
-  const project = projects.find((p) => p.id === Number(id));
+  const [project, setProject] = useState(null);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!project) return <p className="text-white">프로젝트를 찾을 수 없어요.</p>;
+  useEffect(() => {
+    getProjectDetail(id)
+      .then((res) => setProject(res.data))
+      .catch(() => setNotFound(true));
+  }, [id]);
+
+  if (notFound)
+    return <p className="text-white">프로젝트를 찾을 수 없어요.</p>;
+  if (!project) return null;
 
   const {
-    image,
-    title,
-    tags,
+    thumbnailUrl: image,
+    name: title,
+    techStacks: tags,
     description,
-    team,
-    tools,
+    members: team,
     githubUrl,
     serviceUrl,
   } = project;
@@ -67,27 +82,14 @@ function ProjectDetail() {
             <div className="flex flex-col gap-2 lg:gap-4">
               {team.map((member) => (
                 <div
-                  key={member.role}
+                  key={member.part}
                   className="flex items-center gap-2 lg:gap-4"
                 >
-                  <Tag label={member.role} />
+                  <Tag label={partLabels[member.part] ?? member.part} />
                   <p className="text-white-body text-[14px] lg:text-[24px]">
                     {member.name}
                   </p>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <hr className="border-white-body" />
-
-          <div>
-            <p className="text-white text-[16px] lg:text-[28px] font-[700] mb-3 lg:mb-6">
-              사용 툴
-            </p>
-            <div className="flex items-center gap-2 lg:gap-4 flex-wrap">
-              {tools.map((tool) => (
-                <Tag key={tool} label={tool} />
               ))}
             </div>
           </div>
