@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { getHomeStats } from '@/api/home';
 
 function useCountUp(target, duration = 2500) {
   const startValue = Math.floor(target * 0.8);
@@ -60,20 +61,30 @@ function StatCard({ number, label }) {
   );
 }
 
-const stats = [
-  { number: '130+', label: '누적 학회원' },
-  { number: '52+', label: '프로젝트' },
-  { number: '18+', label: '수상 성과' },
-];
-
 function Stats() {
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    getHomeStats()
+      .then((res) => setStats(res.data))
+      .catch(() => setStats(null));
+  }, []);
+
+  if (!stats) return null;
+
+  const statCards = [
+    { number: `${stats.memberCount}+`, label: '누적 학회원' },
+    { number: `${stats.projectCount}+`, label: '프로젝트' },
+    { number: `${stats.awardCount}+`, label: '수상 성과' },
+  ];
+
   return (
     <div className="px-5 md:px-15 lg:px-45">
       <p className="text-white text-[16px] lg:text-[28px] font-[700] mb-6 lg:mb-10">
-        7기수 활동 기록
+        {stats.generation}기수 활동 기록
       </p>
       <div className="grid grid-cols-3 gap-4 lg:gap-6">
-        {stats.map((stat) => (
+        {statCards.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
       </div>
