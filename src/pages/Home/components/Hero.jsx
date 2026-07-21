@@ -48,7 +48,7 @@ function Hero() {
       </div>
       <div
         ref={lineRef}
-        className="flex justify-center mt-16 h-[80px] md:h-[100px] lg:h-[120px]"
+        className="flex justify-center mt-16 h-[150px] md:h-[250px] lg:h-[400px]"
       >
         <div
           className={`w-[1px] ${isVisible ? 'animate-draw-line' : 'h-0'}`}
