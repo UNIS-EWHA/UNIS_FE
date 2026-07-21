@@ -7,7 +7,7 @@ import BackendIcon from '@/assets/ic_backend.svg';
 
 function PartCard({ icon, title, description, tags }) {
   return (
-    <div className="w-full flex flex-col items-center gap-6 backdrop-blur-[50px] border border-white/20 rounded-[10px] lg:rounded-[20px] p-6 lg:p-10">
+    <div className="w-full h-[270px] md:h-[300px] lg:h-[450px] flex flex-col items-center gap-6 backdrop-blur-[50px] border border-white/20 rounded-[10px] lg:rounded-[20px] p-6 lg:p-10">
       <img
         src={icon}
         alt="icon"
@@ -67,7 +67,10 @@ const partCards = [
 ];
 
 function Part() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start' });
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'center',
+    containScroll: false,
+  });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
@@ -91,7 +94,8 @@ function Part() {
           {partCards.map((card, index) => (
             <div
               key={index}
-              className="flex-none w-[97%] md:w-[32%] pr-3 lg:pr-6"
+              className="flex-none w-[85%] md:w-[45%] lg:w-[32%] pr-3 lg:pr-6"
+              onClick={() => emblaApi && emblaApi.scrollTo(index)}
             >
               <PartCard {...card} />
             </div>
@@ -99,7 +103,7 @@ function Part() {
         </div>
       </div>
 
-      <div className="flex md:hidden items-center justify-center gap-2 mt-6">
+      <div className="flex items-center justify-center gap-2 mt-6">
         {partCards.map((_, index) => (
           <div
             key={index}
