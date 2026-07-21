@@ -1,63 +1,55 @@
-import { useState } from 'react';
-import { posts } from '@/data/posts.js';
+import { useEffect, useState } from 'react';
 import SearchBar from '@/components/SearchBar';
 import Tag from '@/components/Tag';
 import Community1 from './components/Community1';
 import Community2 from './components/Community2';
 import Community3 from './components/Community3';
 import Footer from '@/components/Footer';
+import { getCommunityPosts } from '@/api/community';
+import { categoryCodes } from '@/constants/community';
 
 const tabs = ['창업 정보 공유', '팀원 구인', '저장한 글'];
 const categories = ['전체', '지원사업', '공모전', '해커톤', '교내 프로그램'];
-
-function PostCard({ tags, title, content, source, views, date, deadline }) {
-  return (
-    <div className="border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px]">
-      <div className="flex items-center gap-2">
-        {tags.map((tag) => (
-          <Tag key={tag} label={tag} />
-        ))}
-      </div>
-      <p className="text-white text-[14px] font-[600]">{title}</p>
-      <p className="text-white-body text-[12px] font-[400] leading-[160%] line-clamp-2">
-        {content}
-      </p>
-      <hr className="border-white/20" />
-      <div className="flex items-center justify-between">
-        <p className="text-white-body text-[12px]">출처: {source}</p>
-        <p className="text-white-body text-[12px]">조회수: {views}</p>
-      </div>
-      <div className="flex items-center justify-between">
-        <p className="text-white-body text-[12px]">{date}</p>
-        <p className="text-white-body text-[12px]">마감 {deadline}</p>
-      </div>
-    </div>
-  );
-}
+const PAGE_SIZE = 8;
 
 function Community() {
   const [activeTab, setActiveTab] = useState('창업 정보 공유');
   const [activeCategory, setActiveCategory] = useState('전체');
-  const [showAll, setShowAll] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [page, setPage] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [hasNext, setHasNext] = useState(false);
 
-  const getDefaultCount = () => {
-    if (window.innerWidth >= 1510) return 6;
-    return 3;
-  };
-  const [defaultCount, setDefaultCount] = useState(getDefaultCount);
-  const visiblePosts = showAll ? posts : posts.slice(0, defaultCount);
+  useEffect(() => {
+    if (activeTab !== '창업 정보 공유') return;
+
+    getCommunityPosts({
+      category: categoryCodes[activeCategory],
+      keyword: keyword || undefined,
+      page,
+      size: PAGE_SIZE,
+    })
+      .then((res) => {
+        setPosts((prev) =>
+          page === 0 ? res.data.posts : [...prev, ...res.data.posts],
+        );
+        setHasNext(res.data.hasNext);
+      })
+      .catch(() => {
+        setPosts([]);
+        setHasNext(false);
+      });
+  }, [activeTab, activeCategory, keyword, page]);
 
   const renderContent = () => {
     switch (activeTab) {
       case '창업 정보 공유':
         return (
           <Community1
-            visiblePosts={visiblePosts}
-            visiblePosts={visiblePosts}
-            showAll={showAll}
-            setShowAll={setShowAll}
-            defaultCount={defaultCount}
-            totalCount={posts.length}
+            posts={posts}
+            hasNext={hasNext}
+            onLoadMore={() => setPage((p) => p + 1)}
           />
         );
       case '팀원 구인':
@@ -96,7 +88,15 @@ function Community() {
         </div>
 
         <div className="mb-4 lg:mb-6">
-          <SearchBar placeholder="검색어를 입력해주세요." />
+          <SearchBar
+            placeholder="검색어를 입력해주세요."
+            value={searchInput}
+            onChange={setSearchInput}
+            onSearch={() => {
+              setPage(0);
+              setKeyword(searchInput);
+            }}
+          />
         </div>
 
         <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-4 lg:mb-8">
@@ -106,7 +106,10 @@ function Community() {
               label={category}
               fixed={category.length <= 5}
               isActive={activeCategory === category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => {
+                setPage(0);
+                setActiveCategory(category);
+              }}
             />
           ))}
         </div>

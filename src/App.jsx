@@ -13,6 +13,7 @@ import Community1Detail from '@/pages/Community1Detail';
 import PostForm from './pages/Community/components/PostForm';
 import PostComplete from './pages/Community/components/PostForm/PostComplete';
 import Application from './pages/Application';
+import RequireAuth from '@/components/RequireAuth';
 
 function App() {
   return (
@@ -27,10 +28,38 @@ function App() {
         <Route path="/activity" element={<Activity />} />
         <Route path="/project" element={<Project />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/community/write" element={<PostForm />} />
-        <Route path="/community/:id" element={<Community1Detail />} />
-        <Route path="/community/complete" element={<PostComplete />} />
+        <Route
+          path="/community"
+          element={
+            <RequireAuth>
+              <Community />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/community/write"
+          element={
+            <RequireAuth>
+              <PostForm />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/community/:id"
+          element={
+            <RequireAuth>
+              <Community1Detail />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/community/complete"
+          element={
+            <RequireAuth>
+              <PostComplete />
+            </RequireAuth>
+          }
+        />
         <Route path="/application" element={<Application />} />
       </Routes>
     </BrowserRouter>
