@@ -35,7 +35,7 @@ function MobileNav() {
 
       {isOpen && (
         <>
-          <div className="fixed top-0 left-0 right-0 z-50 bg-[#000000]/80 backdrop-blur-[50px] px-5 py-20 md:px-15">
+          <div className="fixed top-0 left-0 right-0 z-50 bg-[#000000]/80 backdrop-blur-[50px] px-5 py-20 md:px-15 animate-slide-down">
             <Link to="/login" onClick={() => setIsOpen(false)}>
               <div className="flex items-center gap-[13px]">
                 <p className="text-[18px] font-[700] leading-normal tracking-0 text-white md:text-[20px]">
