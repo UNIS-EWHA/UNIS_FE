@@ -19,9 +19,22 @@ function SearchBar({ placeholder, value, onChange, onSearch }) {
     }
   };
 
+  const handleSearchClick = () => {
+    if (onSearch) {
+      onSearch(currentValue);
+    }
+  };
+
   return (
     <div className="flex items-center gap-2 lg:gap-6 w-full border border-white rounded-[10px] lg:rounded-[24px] px-4 py-2 md:py-2.5 lg:px-6 lg:py-4">
-      <img src={SearchIcon} alt="search" className="w-[17px] lg:w-9" />
+      <button
+        type="button"
+        onClick={handleSearchClick}
+        aria-label="검색"
+        className="shrink-0"
+      >
+        <img src={SearchIcon} alt="search" className="w-[17px] lg:w-9" />
+      </button>
 
       <input
         type="text"

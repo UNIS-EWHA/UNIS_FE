@@ -60,7 +60,14 @@ function App() {
             </RequireAuth>
           }
         />
-        <Route path="/application" element={<Application />} />
+        <Route
+          path="/application"
+          element={
+            <RequireAuth>
+              <Application />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

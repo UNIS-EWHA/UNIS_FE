@@ -137,7 +137,7 @@ function SignUp() {
         loginId: studentId,
         password,
         generation: generation ? Number(generation) : undefined,
-        part: selectedPart ? partToCode[selectedPart] : undefined,
+        memberPart: selectedPart ? partToCode[selectedPart] : undefined,
         termsAgreed: agree1,
         privacyAgreed: agree2,
       });
