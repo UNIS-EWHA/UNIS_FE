@@ -1,29 +1,29 @@
 import { useNavigate } from 'react-router-dom';
+import ActivityImg1 from '@/assets/img_activity_preview_1.png';
+import ActivityImg2 from '@/assets/img_activity_preview_2.png';
+import ActivityImg3 from '@/assets/img_activity_preview_3.png';
+import ActivityImg4 from '@/assets/img_activity_preview_4.png';
 
 const activities = [
   {
-    image: null,
-    title: '네트워킹',
-    description:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
+    image: ActivityImg1,
+    title: '정기 세션',
+    description: '매주 진행되는 정기 세션에서 파트별 실무 역량을 쌓습니다.',
   },
   {
-    image: null,
-    title: '네트워킹',
-    description:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
+    image: ActivityImg2,
+    title: '프로젝트 회의',
+    description: '팀별로 모여 아이디어를 구체화하고 프로젝트를 진행합니다.',
   },
   {
-    image: null,
-    title: '네트워킹',
-    description:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
+    image: ActivityImg3,
+    title: '직무별 스터디',
+    description: '필요한 기술과 정보를 함께 학습하고 공유합니다.',
   },
   {
-    image: null,
-    title: '네트워킹',
-    description:
-      '내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용',
+    image: ActivityImg4,
+    title: '네트워킹 데이',
+    description: '기수를 넘나드는 교류로 UNIS 커뮤니티를 이어갑니다.',
   },
 ];
 

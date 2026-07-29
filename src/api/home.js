@@ -1,4 +1,6 @@
-import api from "@/lib/axios";
+import api from "@/api/instance";
+
+export const getHomeHero = () => api.get("/home/hero");
 
 export const getHomeStats = () => api.get("/home/stats");
 

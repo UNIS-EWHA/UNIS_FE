@@ -1,15 +1,15 @@
 import axios from 'axios';
 import useAuthStore from '@/store/authStore';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+const instance = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
   const accessToken = useAuthStore.getState().accessToken;
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -26,7 +26,7 @@ const PUBLIC_AUTH_PATHS = [
   '/auth/login-id/check',
 ];
 
-api.interceptors.response.use(
+instance.interceptors.response.use(
   (response) => response.data,
   async (error) => {
     const originalRequest = error.config;
@@ -42,7 +42,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const reissueRes = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/reissue`,
+          `${import.meta.env.VITE_BASE_URL}/auth/reissue`,
           null,
           {
             withCredentials: true,
@@ -54,7 +54,7 @@ api.interceptors.response.use(
         const { accessToken, role } = reissueRes.data.data;
         useAuthStore.getState().setAuth({ accessToken, role });
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return api(originalRequest);
+        return instance(originalRequest);
       } catch (reissueError) {
         useAuthStore.getState().clearAuth();
         if (window.location.pathname !== '/login') {
@@ -68,4 +68,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default instance;
