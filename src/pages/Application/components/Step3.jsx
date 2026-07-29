@@ -1,8 +1,41 @@
+import { useState } from 'react';
 import ProgressBar from './ProgressBar';
+import { submitApplication } from '@/api/application';
 
 const parts = ['기획', '디자인', '프론트엔드', '백엔드'];
 
-function Step3({ formData, onNext, onBack }) {
+function Step3({ formData, onSubmitted, onBack }) {
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setErrorMessage('');
+    try {
+      setIsSubmitting(true);
+      const res = await submitApplication({
+        name: formData.name,
+        phone: formData.phone,
+        studentId: formData.studentId,
+        department: formData.department,
+        part: formData.partCode,
+        selfIntroduction: formData.q1,
+        motivation: formData.q2,
+        projectExperience: formData.q3,
+        conflictExperience: formData.q4,
+        portfolioUrl: formData.portfolioUrl || undefined,
+      });
+      onSubmitted(res.data);
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.detail ??
+          error.response?.data?.message ??
+          '지원서 제출에 실패했습니다.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row lg:gap-20">
       <div className="hidden lg:block lg:w-2/5 shrink-0">
@@ -56,9 +89,11 @@ function Step3({ formData, onNext, onBack }) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-white-body text-[12px] lg:text-[14px]">이메일</p>
+            <p className="text-white-body text-[12px] lg:text-[14px]">
+              전화번호
+            </p>
             <div className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px]">
-              {formData.email || '-'}
+              {formData.phone || '-'}
             </div>
           </div>
 
@@ -67,7 +102,7 @@ function Step3({ formData, onNext, onBack }) {
               전공(복수 전공)
             </p>
             <div className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px]">
-              {formData.major || '-'}
+              {formData.department || '-'}
             </div>
           </div>
 
@@ -133,23 +168,29 @@ function Step3({ formData, onNext, onBack }) {
               주세요.
             </p>
             <div className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px]">
-              {formData.portfolio ? formData.portfolio.name : '-'}
+              {formData.portfolioUrl || '-'}
             </div>
           </div>
         </div>
 
+        {errorMessage && (
+          <p className="text-red-500 text-[12px] text-center">{errorMessage}</p>
+        )}
+
         <div className="flex gap-3 mt-2">
           <button
             onClick={onBack}
-            className="w-1/2 py-3 border border-white text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px]"
+            disabled={isSubmitting}
+            className="w-1/2 py-3 border border-white text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px] disabled:opacity-50"
           >
             수정하기
           </button>
           <button
-            onClick={onNext}
-            className="w-1/2 py-3 bg-blue-primary text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px]"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-1/2 py-3 bg-blue-primary text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px] disabled:opacity-50"
           >
-            제출하기
+            {isSubmitting ? '제출 중...' : '제출하기'}
           </button>
         </div>
       </div>

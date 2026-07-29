@@ -71,6 +71,23 @@ function PostForm() {
           <p className="text-white text-[16px] lg:text-[20px] font-[700] text-center">
             창업 정보에 대해 자세히 알려주세요.
           </p>
+
+          <div className="flex flex-col gap-2">
+            <p className="text-white text-[12px] lg:text-[14px] font-[500]">
+              카테고리
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {categoryOptions.map((option) => (
+                <Tag
+                  key={option}
+                  label={option}
+                  isActive={category === option}
+                  onClick={() => setCategory(option)}
+                />
+              ))}
+            </div>
+          </div>
+
           <div className="flex flex-col gap-2">
             <p className="text-white text-[12px] lg:text-[14px] font-[500]">
               카테고리
@@ -144,6 +161,7 @@ function PostForm() {
               className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none"
             />
           </div>
+
           {errorMessage && (
             <p className="text-red-500 text-[12px] text-center">
               {errorMessage}
