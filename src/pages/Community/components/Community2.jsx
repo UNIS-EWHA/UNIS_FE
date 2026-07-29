@@ -86,21 +86,15 @@ const mockPosts = [
 ];
 
 function RecruitCard({
-  postId,
-  category,
   title,
   content,
   parts,
-  organizer,
   viewCount,
   createdAt,
   deadline,
-  dDay,
   isSaved: initialIsSaved,
 }) {
-  const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(initialIsSaved);
-  const dDayLabel = dDay <= 0 ? '마감' : `D-${dDay}`;
 
   const handleToggleSave = (e) => {
     e.stopPropagation();
@@ -108,10 +102,8 @@ function RecruitCard({
   };
 
   return (
-    <div
-      onClick={() => navigate(`/community/${postId}`)}
-      className="relative border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px] cursor-pointer"
-    >
+    <div className="relative border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px]">
+      {/* 북마크 */}
       <img
         src={isSaved ? FilledBookmarkIcon : BookmarkIcon}
         alt="bookmark"
@@ -119,36 +111,25 @@ function RecruitCard({
         className="absolute top-4 right-4 w-4 h-4 lg:w-5 lg:h-5 cursor-pointer"
       />
 
-      {/* 카테고리 + D-day */}
-      <div className="flex items-center gap-2 pr-6">
-        <Tag label={category} fixed={false} />
-        <Tag label={dDayLabel} />
+      {/* 파트 태그 - 상단 */}
+      <div className="flex items-center gap-2 flex-wrap pr-6">
+        {parts.map((part) => (
+          <Tag key={part} label={part} fixed={false} />
+        ))}
       </div>
 
       {/* 제목 */}
       <p className="text-white text-[14px] font-[600]">{title}</p>
 
       {/* 내용 */}
-      <p className="text-white-body text-[12px] font-[400] leading-[160%] line-clamp-2">
+      <p className="text-white-body text-[12px] font-[400] leading-[160%] line-clamp-4">
         {content}
       </p>
 
       <hr className="border-white/20" />
 
-      {/* 파트 태그 */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {parts.map((part) => (
-          <Tag key={part} label={part} fixed={false} />
-        ))}
-      </div>
-
-      <hr className="border-white/20" />
-
-      {/* 출처 / 조회수 */}
-      <div className="flex items-center justify-between">
-        <p className="text-white-body text-[12px]">{organizer}</p>
-        <p className="text-white-body text-[12px]">조회수: {viewCount}</p>
-      </div>
+      {/* 조회수 */}
+      <p className="text-white-body text-[12px]">조회수: {viewCount}</p>
 
       {/* 날짜 / 마감 */}
       <div className="flex items-center justify-between">
@@ -162,7 +143,6 @@ function RecruitCard({
     </div>
   );
 }
-
 function Community2() {
   const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(6);
