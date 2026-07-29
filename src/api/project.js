@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api from "@/api/instance";
 
 export const getProjects = (params) => api.get("/projects", { params });
 

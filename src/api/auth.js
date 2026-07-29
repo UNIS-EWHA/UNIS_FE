@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api from "@/api/instance";
 
 export const signup = (payload) => api.post("/auth/signup", payload);
 
