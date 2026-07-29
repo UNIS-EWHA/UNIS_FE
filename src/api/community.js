@@ -11,3 +11,12 @@ export const createCommunityPost = (payload) =>
 
 export const toggleCommunityPostSave = (postId) =>
   api.post(`/community/posts/${postId}/save`);
+
+export const getCommunityRecruitments = (params) =>
+  api.get("/community/recruitments", { params });
+
+export const createCommunityRecruitment = (payload) =>
+  api.post("/community/recruitments", payload);
+
+export const toggleCommunityRecruitmentSave = (recruitmentId) =>
+  api.post(`/community/recruitments/${recruitmentId}/save`);

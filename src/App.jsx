@@ -12,6 +12,7 @@ import Community from './pages/Community';
 import Community1Detail from '@/pages/Community1Detail';
 import PostForm from './pages/Community/components/PostForm';
 import PostComplete from './pages/Community/components/PostForm/PostComplete';
+import Community3 from './pages/Community/components/Community3';
 import Application from './pages/Application';
 import RequireAuth from '@/components/RequireAuth';
 
@@ -57,6 +58,14 @@ function App() {
           element={
             <RequireAuth>
               <PostComplete />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/community/recruit-write"
+          element={
+            <RequireAuth>
+              <Community3 />
             </RequireAuth>
           }
         />
