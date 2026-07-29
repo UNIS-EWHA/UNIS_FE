@@ -9,7 +9,7 @@ export const verifyEmailCode = (email, code) =>
   api.post("/auth/email/verify", { email, code });
 
 export const checkLoginId = (loginId) =>
-  api.get("/auth/login-id/check", { params: { "login-id": loginId } });
+  api.get("/auth/login-id/check", { params: { loginId } });
 
 export const login = (payload) => api.post("/auth/login", payload);
 
