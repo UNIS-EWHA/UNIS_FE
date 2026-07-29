@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tag from '@/components/Tag';
 import { categoryLabels } from '@/constants/community';
+import { toggleCommunityPostSave } from '@/api/community';
+import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
+import FilledBookmarkIcon from '@/assets/ic_filled_bookmark_40.svg';
 
 function PostCard({
   postId,
@@ -12,16 +16,34 @@ function PostCard({
   createdAt,
   deadline,
   dDay,
+  isSaved: initialIsSaved,
 }) {
   const navigate = useNavigate();
+  const [isSaved, setIsSaved] = useState(initialIsSaved);
   const dDayLabel = dDay <= 0 ? '마감' : `D-${dDay}`;
+
+  const handleToggleSave = async (e) => {
+    e.stopPropagation();
+    try {
+      const res = await toggleCommunityPostSave(postId);
+      setIsSaved(res.data.isSaved);
+    } catch {
+      // 저장 실패는 조용히 무시, 다시 클릭하면 재시도됨
+    }
+  };
 
   return (
     <div
       onClick={() => navigate(`/community/${postId}`)}
-      className="border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px] cursor-pointer"
+      className="relative border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px] cursor-pointer"
     >
-      <div className="flex items-center gap-2">
+      <img
+        src={isSaved ? FilledBookmarkIcon : BookmarkIcon}
+        alt="bookmark"
+        onClick={handleToggleSave}
+        className="absolute top-4 right-4 w-4 h-4 lg:w-5 lg:h-5 cursor-pointer"
+      />
+      <div className="flex items-center gap-2 pr-6">
         <Tag label={categoryLabels[category] ?? category} />
         <Tag label={dDayLabel} />
       </div>
