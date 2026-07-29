@@ -13,7 +13,7 @@ const tabs = ['창업 정보 공유', '팀원 구인', '저장한 글'];
 const categoryMap = {
   '창업 정보 공유': ['전체', '지원사업', '공모전', '해커톤', '교내 프로그램'],
   '팀원 구인': ['전체', '기획', '디자인', '프론트엔드', '백엔드'],
-  '저장한 글': ['전체', '지원사업', '공모전', '해커톤', '교내 프로그램'],
+  '저장한 글': [],
 };
 
 const PAGE_SIZE = 8;
@@ -112,20 +112,22 @@ function Community() {
           />
         </div>
 
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-4 lg:mb-8">
-          {categoryMap[activeTab].map((category) => (
-            <Tag
-              key={category}
-              label={category}
-              fixed={category.length <= 5}
-              isActive={activeCategory === category}
-              onClick={() => {
-                setPage(0);
-                setActiveCategory(category);
-              }}
-            />
-          ))}
-        </div>
+        {categoryMap[activeTab].length > 0 && (
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-4 lg:mb-8">
+            {categoryMap[activeTab].map((category) => (
+              <Tag
+                key={category}
+                label={category}
+                fixed={category.length <= 5}
+                isActive={activeCategory === category}
+                onClick={() => {
+                  setPage(0);
+                  setActiveCategory(category);
+                }}
+              />
+            ))}
+          </div>
+        )}
 
         {renderContent()}
       </div>
