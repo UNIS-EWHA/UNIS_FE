@@ -90,6 +90,21 @@ function PostForm() {
 
           <div className="flex flex-col gap-2">
             <p className="text-white text-[12px] lg:text-[14px] font-[500]">
+              카테고리
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {categoryOptions.map((option) => (
+                <Tag
+                  key={option}
+                  label={option}
+                  isActive={category === option}
+                  onClick={() => setCategory(option)}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <p className="text-white text-[12px] lg:text-[14px] font-[500]">
               담당 프로젝트 명
             </p>
             <input
