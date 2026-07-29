@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Tag from '@/components/Tag';
 import { createCommunityPost } from '@/api/community';
 
 const categoryOptions = [
@@ -268,7 +269,7 @@ function PostForm() {
           </div>
 
           {errorMessage && (
-            <p className="text-red-500 text-[12px] text-center">{errorMessage}</p>
+            <p className="text-red text-[12px] text-center">{errorMessage}</p>
           )}
 
           <div className="flex justify-end">
