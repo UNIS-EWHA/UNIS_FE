@@ -253,8 +253,8 @@ function RecruitStep3({ formData, onBack, onSubmit }) {
   );
 }
 
-// 메인 Community3
-function Community3() {
+// 메인 Community4
+function Community4() {
   const [, setCurrentStep] = useState(1);
   const [showStep2, setShowStep2] = useState(false);
   const [showStep3, setShowStep3] = useState(false);
@@ -266,7 +266,7 @@ function Community3() {
     deadline: '',
     externalUrl: '',
   });
-  const [isComplete, setIsComplete] = useState(false);
+
   const step2Ref = useRef(null);
   const step3Ref = useRef(null);
 
@@ -293,127 +293,83 @@ function Community3() {
   };
 
   const handleSubmit = () => {
-    setIsComplete(true);
     // TODO: API 연결
+    console.log('제출:', formData);
   };
 
-  // Community3 return 부분 수정
   return (
     <div className="flex flex-col">
-      {isComplete ? (
-        // 완료 화면만
-        <div className="w-full lg:border lg:border-white/20 lg:rounded-[20px] lg:backdrop-blur-[50px] lg:p-10 flex flex-col items-center gap-6 min-h-[300px] justify-center">
-          <ProgressBar
-            currentStep={4}
-            steps={['모집 유형', '상세 정보', '확인 및 제출']}
-          />
+      {/* 상단 안내 */}
+      <div className="mb-8">
+        <p className="text-white text-[16px] lg:text-[24px] font-[700] mb-2">
+          팀원 구인
+        </p>
+        <p className="text-white-body text-[12px] lg:text-[14px]">
+          프로젝트, 창업팀, 해커톤, 스터디 팀원을 찾고 있다면 지금 바로 글을
+          작성하세요.
+        </p>
+      </div>
 
-          <div className="flex flex-col items-center gap-3 text-center">
-            <p className="text-white text-[16px] lg:text-[20px] font-[700]">
-              구인 글이 등록되었습니다.
-            </p>
-            <p className="text-white-body text-[12px] lg:text-[14px] leading-[160%]">
-              팀원 모누는 글이 커뮤니티에 등록되었어요.
-              <br />
-              좋은 팀원을 만나실 날을 바랍니다!
-            </p>
-          </div>
+      {/* Step1 */}
+      <RecruitStep1
+        selectedType={formData.recruitType}
+        onSelect={(type) => handleFormChange('recruitType', type)}
+      />
 
-          <div className="flex flex-col gap-3 w-full">
-            <button
-              onClick={() => (window.location.href = '/community')}
-              className="w-full py-3 bg-blue-primary text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px]"
-            >
-              목록으로 돌아가기
-            </button>
-            <button
-              onClick={() => {
-                setIsComplete(false);
-                setShowStep2(false);
-                setShowStep3(false);
-                setCurrentStep(1);
-                setFormData({
-                  recruitType: '',
-                  title: '',
-                  content: '',
-                  parts: [],
-                  deadline: '',
-                  externalUrl: '',
-                });
-              }}
-              className="w-full py-3 border border-white text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px]"
-            >
-              다른 구인 글 작성하기
-            </button>
-          </div>
+      {/* Step1 → Step2 버튼 */}
+      {!showStep2 && (
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={handleStep1Next}
+            disabled={!formData.recruitType}
+            className="px-8 py-2 bg-blue-primary text-white text-[14px] font-[700] rounded-[8px] disabled:opacity-50"
+          >
+            다음
+          </button>
         </div>
-      ) : (
-        // 스텝 화면들
-        <>
-          <div className="mb-8">
-            <p className="text-white text-[16px] lg:text-[24px] font-[700] mb-2">
-              팀원 구인
-            </p>
-            <p className="text-white-body text-[12px] lg:text-[14px]">
-              프로젝트, 창업팀, 해커톤, 스터디 팀원을 찾고 있다면 지금 바로 글을
-              작성하세요.
-            </p>
-          </div>
+      )}
 
-          <RecruitStep1
-            selectedType={formData.recruitType}
-            onSelect={(type) => handleFormChange('recruitType', type)}
-          />
+      {/* 수직선 애니메이션 - Step1 → Step2 */}
+      {showStep2 && <AnimatedDivider isVisible={showStep2} />}
 
-          {!showStep2 && (
+      {/* Step2 */}
+      {showStep2 && (
+        <div ref={step2Ref}>
+          <RecruitStep2 formData={formData} onChange={handleFormChange} />
+
+          {/* Step2 → Step3 버튼 */}
+          {!showStep3 && (
             <div className="flex justify-end mt-4">
               <button
-                onClick={handleStep1Next}
-                disabled={!formData.recruitType}
+                onClick={handleStep2Next}
+                disabled={!formData.title || !formData.content}
                 className="px-8 py-2 bg-blue-primary text-white text-[14px] font-[700] rounded-[8px] disabled:opacity-50"
               >
                 다음
               </button>
             </div>
           )}
+        </div>
+      )}
 
-          {showStep2 && <AnimatedDivider isVisible={showStep2} />}
+      {/* 수직선 애니메이션 - Step2 → Step3 */}
+      {showStep3 && <AnimatedDivider isVisible={showStep3} />}
 
-          {showStep2 && (
-            <div ref={step2Ref}>
-              <RecruitStep2 formData={formData} onChange={handleFormChange} />
-              {!showStep3 && (
-                <div className="flex justify-end mt-4">
-                  <button
-                    onClick={handleStep2Next}
-                    disabled={!formData.title || !formData.content}
-                    className="px-8 py-2 bg-blue-primary text-white text-[14px] font-[700] rounded-[8px] disabled:opacity-50"
-                  >
-                    다음
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {showStep3 && <AnimatedDivider isVisible={showStep3} />}
-
-          {showStep3 && (
-            <div ref={step3Ref}>
-              <RecruitStep3
-                formData={formData}
-                onBack={() => {
-                  setShowStep3(false);
-                  setCurrentStep(2);
-                }}
-                onSubmit={handleSubmit}
-              />
-            </div>
-          )}
-        </>
+      {/* Step3 */}
+      {showStep3 && (
+        <div ref={step3Ref}>
+          <RecruitStep3
+            formData={formData}
+            onBack={() => {
+              setShowStep3(false);
+              setCurrentStep(2);
+            }}
+            onSubmit={handleSubmit}
+          />
+        </div>
       )}
     </div>
   );
 }
 
-export default Community3;
+export default Community4;

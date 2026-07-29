@@ -153,7 +153,7 @@ function Community2() {
     <div>
       <div className="flex justify-end md:mb-5">
         <button
-          onClick={() => navigate('/community/write')}
+          onClick={() => navigate('/community/recruit-write')}
           className="hidden md:block border border-white text-white text-[16px] px-6 py-2 rounded-full"
         >
           게시글 작성
@@ -178,7 +178,7 @@ function Community2() {
       )}
 
       <button
-        onClick={() => navigate('/community/write')}
+        onClick={() => navigate('/community/recruit-write')}
         className="md:hidden fixed bottom-8 right-8 w-12 h-12 bg-blue-primary rounded-full text-white text-[24px] flex items-center justify-center z-50"
       >
         +

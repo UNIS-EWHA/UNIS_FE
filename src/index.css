@@ -223,3 +223,40 @@ body {
     animation: fadeUp 0.7s ease-out forwards;
   }
 }
+
+@keyframes drawLine {
+  from {
+    height: 0;
+  }
+  to {
+    height: 80px;
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes drawLine {
+    from {
+      height: 0;
+    }
+    to {
+      height: 100px;
+    }
+  }
+}
+
+@media (min-width: 1510px) {
+  @keyframes drawLine {
+    from {
+      height: 0;
+    }
+    to {
+      height: 120px;
+    }
+  }
+}
+
+@layer utilities {
+  .animate-draw-line {
+    animation: drawLine 0.8s ease-out forwards;
+  }
+}

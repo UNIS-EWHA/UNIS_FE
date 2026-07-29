@@ -1,6 +1,7 @@
-function ProgressBar({ currentStep }) {
-  const steps = ['인적사항', '세부 정보', '확인 및 제출'];
-
+function ProgressBar({
+  currentStep,
+  steps = ['인적사항', '세부 정보', '확인 및 제출'],
+}) {
   return (
     <div className="flex items-center justify-center gap-4 mb-8 lg:mb-12">
       {steps.map((label, index) => {

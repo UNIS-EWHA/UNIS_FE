@@ -3,7 +3,7 @@ import SearchBar from '@/components/SearchBar';
 import Tag from '@/components/Tag';
 import Community1 from './components/Community1';
 import Community2 from './components/Community2';
-import Community3 from './components/Community3';
+import Community4 from './components/Community4';
 import Footer from '@/components/Footer';
 import { getCommunityPosts } from '@/api/community';
 import { categoryCodes } from '@/constants/community';
@@ -68,7 +68,7 @@ function Community() {
       case '팀원 구인':
         return <Community2 activeCategory={activeCategory} />;
       case '저장한 글':
-        return <Community3 />;
+        return <Community4 />;
       default:
         return null;
     }
