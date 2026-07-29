@@ -66,7 +66,7 @@ function Community() {
           />
         );
       case '팀원 구인':
-        return <Community2 activeCategory={activeCategory} />;
+        return <Community2 activeCategory={activeCategory} keyword={keyword} />;
       case '저장한 글':
         return <Community4 />;
       default:

@@ -1,91 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tag from '@/components/Tag';
 import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
 import FilledBookmarkIcon from '@/assets/ic_filled_bookmark_40.svg';
+import {
+  getCommunityRecruitments,
+  toggleCommunityRecruitmentSave,
+} from '@/api/community';
+import { partCodes, partLabels } from '@/constants/community';
 
-const mockPosts = [
-  {
-    postId: 1,
-    category: 'DESIGN',
-    title: '이화 헬스테크 해커톤 같이 나가실 분 구합니다!',
-    content: '기한 제한 공고 및 해주세요.',
-    parts: ['디자인', '백엔드'],
-    organizer: '출처: 이화',
-    viewCount: 67,
-    createdAt: '2025-04-22',
-    deadline: '2025-05-24',
-    dDay: 21,
-    isSaved: false,
-  },
-  {
-    postId: 2,
-    category: 'DESIGN',
-    title: '이화 헬스테크 해커톤 같이 나가실 분 구합니다!',
-    content: '기한 제한 공고 및 해주세요.',
-    parts: ['디자인', '백엔드'],
-    organizer: '출처: 이화',
-    viewCount: 67,
-    createdAt: '2025-04-22',
-    deadline: '2025-05-24',
-    dDay: 21,
-    isSaved: false,
-  },
-  {
-    postId: 3,
-    category: 'DESIGN',
-    title: '이화 헬스테크 해커톤 같이 나가실 분 구합니다!',
-    content: '기한 제한 공고 및 해주세요.',
-    parts: ['디자인', '백엔드'],
-    organizer: '출처: 이화',
-    viewCount: 67,
-    createdAt: '2025-04-22',
-    deadline: '2025-05-24',
-    dDay: 21,
-    isSaved: false,
-  },
-  {
-    postId: 4,
-    category: 'DESIGN',
-    title: '이화 헬스테크 해커톤 같이 나가실 분 구합니다!',
-    content: '기한 제한 공고 및 해주세요.',
-    parts: ['디자인', '백엔드'],
-    organizer: '출처: 이화',
-    viewCount: 67,
-    createdAt: '2025-04-22',
-    deadline: '2025-05-24',
-    dDay: 21,
-    isSaved: true,
-  },
-  {
-    postId: 5,
-    category: 'FRONTEND',
-    title: '이화 헬스테크 해커톤 같이 나가실 분 구합니다!',
-    content: '기한 제한 공고 및 해주세요.',
-    parts: ['프론트엔드'],
-    organizer: '출처: 이화',
-    viewCount: 41,
-    createdAt: '2025-04-23',
-    deadline: '2025-05-28',
-    dDay: 3,
-    isSaved: false,
-  },
-  {
-    postId: 6,
-    category: 'PLANNING',
-    title: '이화 헬스테크 해커톤 같이 나가실 분 구합니다!',
-    content: '내용내용내용내용내용내용내용내용내용내용내용내용',
-    parts: ['기획'],
-    organizer: '출처: 이화',
-    viewCount: 41,
-    createdAt: '2025-04-23',
-    deadline: '2025-05-28',
-    dDay: 0,
-    isSaved: false,
-  },
-];
+const PAGE_SIZE = 8;
 
 function RecruitCard({
+  recruitmentId,
   title,
   content,
   parts,
@@ -94,11 +21,16 @@ function RecruitCard({
   deadline,
   isSaved: initialIsSaved,
 }) {
-  const [isSaved, setIsSaved] = useState(initialIsSaved);
+  const [isSaved, setIsSaved] = useState(!!initialIsSaved);
 
-  const handleToggleSave = (e) => {
+  const handleToggleSave = async (e) => {
     e.stopPropagation();
-    setIsSaved((prev) => !prev);
+    try {
+      const res = await toggleCommunityRecruitmentSave(recruitmentId);
+      setIsSaved(res.data.isSaved);
+    } catch {
+      // 저장 실패는 조용히 무시, 다시 클릭하면 재시도됨
+    }
   };
 
   return (
@@ -114,7 +46,7 @@ function RecruitCard({
       {/* 파트 태그 - 상단 */}
       <div className="flex items-center gap-2 flex-wrap pr-6">
         {parts.map((part) => (
-          <Tag key={part} label={part} fixed={false} />
+          <Tag key={part} label={partLabels[part] ?? part} fixed={false} />
         ))}
       </div>
 
@@ -143,11 +75,39 @@ function RecruitCard({
     </div>
   );
 }
-function Community2() {
+function Community2({ activeCategory, keyword }) {
   const navigate = useNavigate();
-  const [visibleCount, setVisibleCount] = useState(6);
-  const visiblePosts = mockPosts.slice(0, visibleCount);
-  const hasMore = visibleCount < mockPosts.length;
+  const [page, setPage] = useState(0);
+  const [recruitments, setRecruitments] = useState([]);
+  const [hasNext, setHasNext] = useState(false);
+
+  const filterKey = `${activeCategory}|${keyword}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
+    setPage(0);
+  }
+
+  useEffect(() => {
+    getCommunityRecruitments({
+      part: partCodes[activeCategory],
+      keyword: keyword || undefined,
+      page,
+      size: PAGE_SIZE,
+    })
+      .then((res) => {
+        setRecruitments((prev) =>
+          page === 0
+            ? res.data.recruitments
+            : [...prev, ...res.data.recruitments]
+        );
+        setHasNext(res.data.hasNext);
+      })
+      .catch(() => {
+        setRecruitments([]);
+        setHasNext(false);
+      });
+  }, [activeCategory, keyword, page]);
 
   return (
     <div>
@@ -161,15 +121,15 @@ function Community2() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {visiblePosts.map((post) => (
-          <RecruitCard key={post.postId} {...post} />
+        {recruitments.map((post) => (
+          <RecruitCard key={post.recruitmentId} {...post} />
         ))}
       </div>
 
-      {hasMore && (
+      {hasNext && (
         <div className="flex items-center justify-end mt-6">
           <button
-            onClick={() => setVisibleCount((prev) => prev + 6)}
+            onClick={() => setPage((prev) => prev + 1)}
             className="border border-white text-white text-[12px] lg:text-[20px] px-8 py-2 rounded-full"
           >
             더보기
