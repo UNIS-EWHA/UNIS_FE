@@ -9,7 +9,13 @@ import { getCommunityPosts } from '@/api/community';
 import { categoryCodes } from '@/constants/community';
 
 const tabs = ['창업 정보 공유', '팀원 구인', '저장한 글'];
-const categories = ['전체', '지원사업', '공모전', '해커톤', '교내 프로그램'];
+
+const categoryMap = {
+  '창업 정보 공유': ['전체', '지원사업', '공모전', '해커톤', '교내 프로그램'],
+  '팀원 구인': ['전체', '기획', '디자인', '프론트엔드', '백엔드'],
+  '저장한 글': ['전체', '지원사업', '공모전', '해커톤', '교내 프로그램'],
+};
+
 const PAGE_SIZE = 8;
 
 function Community() {
@@ -32,7 +38,7 @@ function Community() {
     })
       .then((res) => {
         setPosts((prev) =>
-          page === 0 ? res.data.posts : [...prev, ...res.data.posts],
+          page === 0 ? res.data.posts : [...prev, ...res.data.posts]
         );
         setHasNext(res.data.hasNext);
       })
@@ -41,6 +47,13 @@ function Community() {
         setHasNext(false);
       });
   }, [activeTab, activeCategory, keyword, page]);
+
+  // 탭 바뀌면 카테고리 초기화
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setActiveCategory('전체');
+    setPage(0);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -53,7 +66,7 @@ function Community() {
           />
         );
       case '팀원 구인':
-        return <Community2 />;
+        return <Community2 activeCategory={activeCategory} />;
       case '저장한 글':
         return <Community3 />;
       default:
@@ -75,7 +88,7 @@ function Community() {
           {tabs.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`text-[12px] lg:text-[20px] font-[500] pb-2 mr-6 border-b-2 transition-all duration-200 ${
                 activeTab === tab
                   ? 'text-white border-white'
@@ -100,7 +113,7 @@ function Community() {
         </div>
 
         <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-4 lg:mb-8">
-          {categories.map((category) => (
+          {categoryMap[activeTab].map((category) => (
             <Tag
               key={category}
               label={category}
