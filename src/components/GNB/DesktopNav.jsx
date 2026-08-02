@@ -2,14 +2,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import UnisLogo from '@/assets/ic_unis_logo_48.svg';
 import MenuItem from './components/MenuItem';
 import useAuthStore from '@/store/authStore';
+import useRecruitInfo from '@/hooks/useRecruitInfo';
 import { logout } from '@/api/auth';
 
-function Button({ name, color, onClick }) {
+function Button({ name, color, onClick, disabled }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       style={{ borderColor: color, color: color }}
-      className="flex items-center justify-center w-[118px] h-10 border-2 font-pretendard text-[20px] font-[500] leading-[130%] rounded-[24px]"
+      className="flex items-center justify-center min-w-[118px] px-4 h-10 border-2 font-pretendard text-[20px] font-[500] leading-[130%] rounded-[24px] disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {name}
     </button>
@@ -19,6 +21,7 @@ function DesktopNav() {
   const navigate = useNavigate();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const clearAuth = useAuthStore((state) => state.clearAuth);
+  const { applyButtonLabel, isApplyDisabled } = useRecruitInfo();
 
   const handleAuthClick = async () => {
     if (!isLoggedIn) {
@@ -61,9 +64,10 @@ function DesktopNav() {
             onClick={handleAuthClick}
           />
           <Button
-            name="지원하기"
+            name={applyButtonLabel}
             color="var(--color-blue-mint)"
             onClick={() => navigate('/application')}
+            disabled={isApplyDisabled}
           />
         </div>
       </div>

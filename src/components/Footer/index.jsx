@@ -1,8 +1,10 @@
 import FooterImage from '@/assets/img_footer.png';
 import { useNavigate } from 'react-router-dom';
+import useRecruitInfo from '@/hooks/useRecruitInfo';
 
 function Footer() {
   const navigate = useNavigate();
+  const { applyButtonLabel, isApplyDisabled } = useRecruitInfo();
   return (
     <div className="relative w-full aspect-16/7">
       {/* 배경 이미지 */}
@@ -22,11 +24,13 @@ function Footer() {
         </p>
         <button
           onClick={() => {
+            if (isApplyDisabled) return;
             navigate('/application');
           }}
-          className="border-[0.82px] md:border-[2.13px] lg:-border-4 border-blue-mint text-[10px] md:text-[16px] lg:text-[28px] text-[#91f8ff] font-[700] leading-normal rounded-[20px] md:rounded-[52px] lg:rounded-[40px] flex items-center justify-center w-18 h-[21px] md:w-[122px] md:h-[34px] lg:w-[276px] lg:h-18"
+          disabled={isApplyDisabled}
+          className="border-[0.82px] md:border-[2.13px] lg:-border-4 border-blue-mint text-[10px] md:text-[16px] lg:text-[28px] text-[#91f8ff] font-[700] leading-normal rounded-[20px] md:rounded-[52px] lg:rounded-[40px] flex items-center justify-center min-w-18 h-[21px] px-3 md:min-w-[122px] md:h-[34px] lg:min-w-[276px] lg:h-18 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          지원하기
+          {applyButtonLabel}
         </button>
       </div>
     </div>

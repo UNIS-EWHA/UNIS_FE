@@ -5,6 +5,7 @@ import MenuIcon from '@/assets/ic_menu_33.svg';
 import ChevronRightIcon from '@/assets/ic_chevron_right.svg';
 import MenuItem from './components/MenuItem';
 import useAuthStore from '@/store/authStore';
+import useRecruitInfo from '@/hooks/useRecruitInfo';
 import { logout } from '@/api/auth';
 
 const CLOSE_ANIMATION_DURATION = 400;
@@ -15,6 +16,7 @@ function MobileNav() {
   const [shouldRender, setShouldRender] = useState(false);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const clearAuth = useAuthStore((state) => state.clearAuth);
+  const { applyButtonLabel, isApplyDisabled } = useRecruitInfo();
 
   useEffect(() => {
     if (isOpen) return undefined;
@@ -115,12 +117,14 @@ function MobileNav() {
 
             <button
               onClick={() => {
+                if (isApplyDisabled) return;
                 navigate('/application');
                 closeMenu();
               }}
-              className="border-[0.82px] border-blue-mint text-[10px] text-[#91f8ff] font-[700] leading-normal px-[18.5px] py-[3px] rounded-[20px]"
+              disabled={isApplyDisabled}
+              className="border-[0.82px] border-blue-mint text-[10px] text-[#91f8ff] font-[700] leading-normal px-[18.5px] py-[3px] rounded-[20px] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              지원하기
+              {applyButtonLabel}
             </button>
           </div>
 

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { getHomeHero } from '@/api/home';
+import useRecruitInfo from '@/hooks/useRecruitInfo';
 import HeroBackground from '@/assets/img_Home_background.png';
 
 const DEFAULT_HERO = {
@@ -13,6 +14,7 @@ function Hero() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [hero, setHero] = useState(DEFAULT_HERO);
+  const { applyButtonLabel, isApplyDisabled } = useRecruitInfo();
   const lineRef = useRef(null);
 
   useEffect(() => {
@@ -64,10 +66,11 @@ function Hero() {
         </h1>
 
         <button
-          onClick={() => navigate('/application')}
-          className="border-2 border-blue-mint text-blue-mint text-[12px] lg:text-[24px] px-4 md:px-8 lg:px-12 py-2 rounded-[40px]"
+          onClick={() => !isApplyDisabled && navigate('/application')}
+          disabled={isApplyDisabled}
+          className="border-2 border-blue-mint text-blue-mint text-[12px] lg:text-[24px] px-4 md:px-8 lg:px-12 py-2 rounded-[40px] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {hero.ctaText}
+          {isApplyDisabled ? applyButtonLabel : hero.ctaText}
         </button>
       </div>
 

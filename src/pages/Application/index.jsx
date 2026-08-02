@@ -110,11 +110,16 @@ function Application() {
           <div className="border border-white/20 rounded-[10px] px-4 py-3 flex flex-col gap-1">
             <p className="text-white text-[12px] lg:text-[16px] font-semibold">
               {recruitInfo.generation}기 모집{' '}
-              {recruitInfo.status === 'OPEN' ? '중' : '마감'} · 정원{' '}
+              {recruitInfo.status === 'OPEN'
+                ? '중'
+                : recruitInfo.status === 'PREPARING'
+                  ? '준비 중'
+                  : '마감'}{' '}
+              · 정원{' '}
               {recruitInfo.capacity}명
             </p>
             <p className="text-white-body text-[11px] lg:text-[12px]">
-              정기 세션: {recruitInfo.schedule} · 지원 마감:{' '}
+              모집 기간: {recruitInfo.schedule} · 지원 마감:{' '}
               {recruitInfo.endDate}
             </p>
           </div>
