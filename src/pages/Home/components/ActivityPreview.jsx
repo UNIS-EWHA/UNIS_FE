@@ -35,10 +35,10 @@ function ActivityCard({ image, title, description }) {
           <img src={image} alt={title} className="w-full h-full object-cover" />
         )}
       </div>
-      <p className="text-white text-[14px] lg:text-[20px] font-[600]">
+      <p className="text-white text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
         {title}
       </p>
-      <p className="text-white-body text-[12px] lg:text-[16px] font-[400] leading-[160%] line-clamp-3">
+      <p className="text-white-body text-[12px] md:text-[14px] lg:text-[16px] font-[400] leading-[160%] line-clamp-3">
         {description}
       </p>
     </div>
@@ -50,24 +50,24 @@ function ActivityPreview() {
 
   return (
     <div className="px-5 md:px-15 lg:px-45">
-      <div className="flex items-start justify-between mb-6 lg:mb-10">
+      <div className="flex items-start justify-between mb-6 md:mb-8 lg:mb-10">
         <div>
-          <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2">
+          <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2 md:mb-3 lg:mb-4">
             Our Activities
           </p>
-          <p className="text-white text-[18px] lg:text-[38px] font-[700]">
+          <p className="text-white text-[18px] md:text-[20px] lg:text-[38px] font-[700]">
             UNIS의 활동
           </p>
         </div>
         <button
           onClick={() => navigate('/activity')}
-          className="text-white text-[12px] lg:text-[20px] font-[400] shrink-0 ml-8"
+          className="text-white text-[12px] md:text-[14px] lg:text-[20px] font-[400] shrink-0 ml-8"
         >
           활동 보기 →
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
         {activities.map((activity, index) => (
           <ActivityCard key={index} {...activity} />
         ))}

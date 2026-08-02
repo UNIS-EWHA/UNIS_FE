@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { getHomeHero } from '@/api/home';
+import HeroBackground from '@/assets/img_Home_background.png';
 
 const DEFAULT_HERO = {
   mainTitle: 'Be UNIque,\nWork in UNIson.',
@@ -37,33 +38,44 @@ function Hero() {
   const titleLines = hero.mainTitle.split('\n');
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-5 relative">
-      <p className="text-white-body text-[12px] lg:text-[16px] font-[400] mb-6 lg:mb-10">
-        {hero.subTitle}
-      </p>
+    <div className="flex flex-col items-center justify-center min-h-screen px-5">
+      <div className="relative w-full aspect-3/2 flex flex-col items-center justify-center">
+        <img
+          src={HeroBackground}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        />
 
-      <h1 className="text-center font-[700] text-[32px] md:text-[48px] lg:text-[64px] leading-tight mb-6 lg:mb-10">
-        {titleLines.map((line, index) => (
-          <Fragment key={index}>
-            <span className={index === 0 ? 'text-white' : 'text-blue-primary'}>
-              {line}
-            </span>
-            {index < titleLines.length - 1 && <br />}
-          </Fragment>
-        ))}
-      </h1>
+        <p className="text-white text-[28px] font-bold mb-6 lg:mb-40">
+          {hero.subTitle}
+        </p>
 
-      <button
-        onClick={() => navigate('/application')}
-        className="border border-white text-white text-[12px] lg:text-[16px] px-6 py-2 rounded-full mb-20 lg:mb-32"
-      >
-        {hero.ctaText}
-      </button>
-      <div className="text-center">
-        <p className="text-white text-[14px] md:text-[16px] lg:text-[20px] font-[500] leading-[160%]">
+        <h1 className="text-center font-extrabold text-[32px] md:text-[48px] lg:text-[128px] leading-tight mb-6 lg:mb-30">
+          {titleLines.map((line, index) => (
+            <Fragment key={index}>
+              <span
+                className={index === 0 ? 'text-white' : 'text-blue-primary'}
+              >
+                {line}
+              </span>
+              {index < titleLines.length - 1 && <br />}
+            </Fragment>
+          ))}
+        </h1>
+
+        <button
+          onClick={() => navigate('/application')}
+          className="border-2 border-blue-mint text-blue-mint text-[12px] lg:text-[24px] px-12 py-2 rounded-[40px]"
+        >
+          {hero.ctaText}
+        </button>
+      </div>
+
+      <div className="text-center mt-16 lg:mt-50">
+        <p className="text-white text-[14px] md:text-[16px] lg:text-[48px] font-bold leading-[150%]">
           세상을 밝힐 첫 걸음, UNIS 입니다.
         </p>
-        <p className="text-white text-[14px] md:text-[16px] lg:text-[20px] font-[500] leading-[160%]">
+        <p className="text-white text-[14px] md:text-[16px] lg:text-[48px] font-bold leading-[150%]">
           당신의 반짝이는 열정은 세상을 바꿀 빛이 됩니다.
         </p>
       </div>
