@@ -21,7 +21,7 @@ function PartCard({ icon, title, description, tags }) {
         {description}
       </p>
 
-      <div className="flex items-center gap-4 mt-3">
+      <div className="flex items-center gap-4 mt-auto">
         {tags.map((tag) => (
           <button
             key={tag}
