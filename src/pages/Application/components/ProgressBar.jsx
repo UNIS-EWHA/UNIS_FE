@@ -11,7 +11,7 @@ function ProgressBar({
 
         return (
           <div key={label} className="flex items-center gap-4">
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-4">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-[700] border-2 ${
                   isActive
@@ -24,13 +24,13 @@ function ProgressBar({
                 {stepNum}
               </div>
               <p
-                className={`text-[10px] lg:text-[12px] ${isActive ? 'text-white' : 'text-white/30'}`}
+                className={`text-[10px] lg:text-[12px] ${isActive ? 'text-blue-primary' : 'text-white/30'}`}
               >
                 {label}
               </p>
             </div>
             {index < steps.length - 1 && (
-              <div className="w-8 lg:w-16 h-[1px] bg-white/20 mb-4" />
+              <div className="w-8 lg:w-16 h-[1px] bg-transparent" />
             )}
           </div>
         );
