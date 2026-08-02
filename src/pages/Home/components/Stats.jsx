@@ -88,7 +88,7 @@ function Stats() {
       {stats && (
         <>
           <p className="text-white text-[16px] md:text-[24px] lg:text-[38px] font-[700] mb-6 md:mb-8 lg:mb-10">
-            {stats.generation}기수 활동 기록
+            {stats.generation - 1}기수 활동 기록
           </p>
           <div className="flex flex-col md:grid md:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
             {statCards.map((stat) => (
