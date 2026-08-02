@@ -207,7 +207,7 @@ function SignUp() {
             회원가입
           </p>
           <p className="text-white text-[12px] md:text-[18px] lg:text-[20px] font-normal text-center">
-            이메일 또는 소셜 계정으로 가입하세요.
+            학번과 이메일로 가입하세요.
           </p>
         </div>
 

@@ -55,7 +55,7 @@ function StatCard({ number, label }) {
         {count}
         {suffix}
       </p>
-      <p className="text-white-body text-[10px] md:text-[16px] lg:text-[20px] font-[400]">
+      <p className="text-white-body text-[8px] md:text-[16px] lg:text-[20px] font-[400]">
         {label}
       </p>
     </div>

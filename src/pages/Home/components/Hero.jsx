@@ -46,7 +46,7 @@ function Hero() {
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         />
 
-        <p className="text-white text-12px lg:text-[28px] font-bold mb-6 lg:mb-40">
+        <p className="text-white text-[12px] md:text-[20px] lg:text-[28px] font-bold mb-6 lg:mb-40">
           {hero.subTitle}
         </p>
 
@@ -65,7 +65,7 @@ function Hero() {
 
         <button
           onClick={() => navigate('/application')}
-          className="border-2 border-blue-mint text-blue-mint text-[12px] lg:text-[24px] px-12 py-2 rounded-[40px]"
+          className="border-2 border-blue-mint text-blue-mint text-[12px] lg:text-[24px] px-4 md:px-8 lg:px-12 py-2 rounded-[40px]"
         >
           {hero.ctaText}
         </button>
