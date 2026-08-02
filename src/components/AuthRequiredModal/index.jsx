@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-function AuthRequiredModal({ onClose }) {
+function AuthRequiredModal({ onClose, from }) {
   const navigate = useNavigate();
 
   return (
@@ -11,7 +11,7 @@ function AuthRequiredModal({ onClose }) {
         </p>
         <div className="flex flex-col gap-4 md:gap-6 lg:gap-10 w-full">
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login', { state: { from } })}
             className="w-full py-2 md:py-2.5 lg:py-3 bg-white text-black text-[14px] md:text-[16px] lg:text-[20px] font-bold rounded-md md:rounded-lg"
           >
             로그인하기

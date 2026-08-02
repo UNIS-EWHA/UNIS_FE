@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getHomeStats } from '@/api/home';
 import useInView from '@/hooks/useInView';
 
-function useCountUp(target, duration = 2500) {
+function useCountUp(target, duration = 1000) {
   const startValue = Math.floor(target * 0.8);
   const [count, setCount] = useState(startValue);
   const [isVisible, setIsVisible] = useState(false);
@@ -51,11 +51,11 @@ function StatCard({ number, label }) {
       ref={ref}
       className="flex flex-col items-center justify-center border border-white/20 rounded-[10px] p-8 md:p-10 lg:p-12 backdrop-blur-[50px] gap-2"
     >
-      <p className="text-blue-mint text-[32px] md:text-[34px] lg:text-[38px] font-[700]">
+      <p className="text-blue-mint text-[28px] md:text-[34px] lg:text-[38px] font-[700]">
         {count}
         {suffix}
       </p>
-      <p className="text-white-body text-[12px] md:text-[16px] lg:text-[20px] font-[400]">
+      <p className="text-white-body text-[10px] md:text-[16px] lg:text-[20px] font-[400]">
         {label}
       </p>
     </div>

@@ -12,13 +12,13 @@ function PartCard({ icon, title, description, tags }) {
       <img
         src={icon}
         alt="icon"
-        className="md:w-4 md:h-auto lg:w-[30px] lg:h-auto"
+        className="w-6 h-6 md:w-4 md:h-auto lg:w-[30px] lg:h-auto"
       />
-      <p className="text-white text-[16px] lg:text-[28px] font-[600] lg:font-[700] leading-[150%] text-center">
+      <p className="text-white text-[16px] lg:text-[28px] font-[600] lg:font-[700] leading-[150%] text-center line-clamp-1">
         {title}
       </p>
 
-      <p className="text-white-body text-[12px] lg:text-[20px] font-[400] leading-[160%]">
+      <p className="text-white-body text-[12px] lg:text-[20px] font-[400] leading-[160%] line-clamp-3">
         {description}
       </p>
 

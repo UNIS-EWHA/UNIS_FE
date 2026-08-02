@@ -46,7 +46,7 @@ function Hero() {
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         />
 
-        <p className="text-white text-[28px] font-bold mb-6 lg:mb-40">
+        <p className="text-white text-12px lg:text-[28px] font-bold mb-6 lg:mb-40">
           {hero.subTitle}
         </p>
 

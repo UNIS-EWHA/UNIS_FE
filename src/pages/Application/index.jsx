@@ -114,7 +114,7 @@ function Application() {
               {recruitInfo.capacity}명
             </p>
             <p className="text-white-body text-[11px] lg:text-[12px]">
-              전형 일정: {recruitInfo.schedule} · 지원 마감:{' '}
+              정기 세션: {recruitInfo.schedule} · 지원 마감:{' '}
               {recruitInfo.endDate}
             </p>
           </div>

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FindPassword from '../FindPassword';
 import { login } from '@/api/auth';
 import useAuthStore from '@/store/authStore';
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +30,8 @@ function Login() {
         keepLogin: rememberMe,
       });
       setAuth(res.data);
-      navigate('/');
+      const from = location.state?.from;
+      navigate(from ? `${from.pathname}${from.search}` : '/');
     } catch (error) {
       setErrorMessage(
         error.response?.data?.detail ??

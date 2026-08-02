@@ -11,7 +11,7 @@ function AnimatedDivider({ isVisible }) {
         className={`w-0.5 transition-none ${isVisible ? 'animate-draw-line' : 'h-0'}`}
         style={{
           background:
-            'linear-gradient(to bottom, rgba(22,112,251,0), rgba(22,112,251,0.9))',
+            'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.9))',
         }}
       />
     </div>
