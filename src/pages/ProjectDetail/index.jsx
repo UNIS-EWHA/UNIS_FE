@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Tag from '@/components/Tag';
 import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
@@ -12,7 +12,10 @@ const partLabels = {
   BACKEND: '백엔드',
 };
 
+const partOrder = ['PLANNING', 'DESIGN', 'FRONTEND', 'BACKEND'];
+
 function ProjectDetail() {
+  const navigate = useNavigate();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const { id } = useParams();
   const [project, setProject] = useState(null);
@@ -38,8 +41,23 @@ function ProjectDetail() {
     serviceUrl,
   } = project;
 
+  const membersByPart = partOrder
+    .map((part) => ({
+      part,
+      names: team
+        .filter((member) => member.part === part)
+        .map((member) => member.name),
+    }))
+    .filter((group) => group.names.length > 0);
+
   return (
     <div className="w-full max-w-[2800px] mx-auto px-5 md:px-15 lg:px-45 py-8 lg:py-14">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 text-white-body text-[12px] lg:text-[16px] mb-4 lg:mb-8"
+      >
+        ← 뒤로가기
+      </button>
       <div className="flex items-center justify-between mb-4 lg:mb-8">
         <p className="text-white text-[16px] md:text-[20px] lg:text-[32px] font-[700]">
           {title}
@@ -80,49 +98,50 @@ function ProjectDetail() {
               팀 구성
             </p>
             <div className="flex flex-col gap-2 lg:gap-4">
-              {team.map((member) => (
-                <div
-                  key={member.part}
-                  className="flex items-center gap-2 lg:gap-4"
-                >
-                  <Tag label={partLabels[member.part] ?? member.part} />
+              {membersByPart.map(({ part, names }) => (
+                <div key={part} className="flex items-center gap-2 lg:gap-4">
+                  <Tag label={partLabels[part] ?? part} />
                   <p className="text-white-body text-[14px] lg:text-[24px]">
-                    {member.name}
+                    {names.join(', ')}
                   </p>
                 </div>
               ))}
             </div>
           </div>
 
-          <hr className="border-white-body" />
+          {(githubUrl || serviceUrl) && (
+            <>
+              <hr className="border-white-body" />
 
-          <div>
-            <p className="text-white text-[16px] lg:text-[28px] font-[700] mb-3 lg:mb-6">
-              결과물 링크
-            </p>
-            <div className="flex flex-col gap-2">
-              {githubUrl && (
-                <a
-                  href={githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full py-2 lg:py-3 text-center text-black bg-white rounded-[8px] text-[14px] lg:text-[20px] font-[700]"
-                >
-                  Github
-                </a>
-              )}
-              {serviceUrl && (
-                <a
-                  href={serviceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full py-2 lg:py-3 text-center text-black bg-white rounded-[8px] text-[14px] lg:text-[20px] font-[700]"
-                >
-                  서비스 바로가기
-                </a>
-              )}
-            </div>
-          </div>
+              <div>
+                <p className="text-white text-[16px] lg:text-[28px] font-[700] mb-3 lg:mb-6">
+                  결과물 링크
+                </p>
+                <div className="flex flex-col gap-2">
+                  {githubUrl && (
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 lg:py-3 text-center text-black bg-white rounded-[8px] text-[14px] lg:text-[20px] font-[700]"
+                    >
+                      Github
+                    </a>
+                  )}
+                  {serviceUrl && (
+                    <a
+                      href={serviceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 lg:py-3 text-center text-black bg-white rounded-[8px] text-[14px] lg:text-[20px] font-[700]"
+                    >
+                      서비스 바로가기
+                    </a>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

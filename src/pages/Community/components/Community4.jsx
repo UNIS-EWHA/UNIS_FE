@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tag from '@/components/Tag';
+import CardTag from '@/components/CardTag';
+import EmptyMessage from '@/components/EmptyMessage';
 import FilledBookmarkIcon from '@/assets/ic_filled_bookmark_40.svg';
 import { getSavedPosts } from '@/api/saved';
 import {
   toggleCommunityPostSave,
   toggleCommunityRecruitmentSave,
 } from '@/api/community';
-import { categoryLabels } from '@/constants/community';
+import { categoryLabels, recruitmentTypeLabels } from '@/constants/community';
 
 const savedCategories = ['전체', '창업 정보', '팀원 구인'];
+const categoryTypeMap = {
+  전체: undefined,
+  '창업 정보': 'POST',
+  '팀원 구인': 'RECRUITMENT',
+};
+const PAGE_SIZE = 8;
 
 function SavedPostCard({
   savedId,
@@ -60,11 +68,14 @@ function SavedPostCard({
 
       {/* 태그 */}
       <div className="flex items-center gap-2 flex-wrap pr-6">
-        <Tag
-          label={isPost ? (categoryLabels[category] ?? category) : recruitmentType}
-          fixed={false}
+        <CardTag
+          label={
+            isPost
+              ? (categoryLabels[category] ?? category)
+              : (recruitmentTypeLabels[recruitmentType] ?? recruitmentType)
+          }
         />
-        {dDayLabel && <Tag label={dDayLabel} />}
+        {dDayLabel && <CardTag label={dDayLabel} />}
       </div>
 
       {/* 제목 */}
@@ -84,24 +95,31 @@ function SavedPostCard({
 
 function Community4() {
   const [activeCategory, setActiveCategory] = useState('전체');
+  const [page, setPage] = useState(0);
   const [savedPosts, setSavedPosts] = useState([]);
+  const [hasNext, setHasNext] = useState(false);
 
   useEffect(() => {
-    getSavedPosts()
-      .then((res) => setSavedPosts(res.data.saved))
-      .catch(() => setSavedPosts([]));
-  }, []);
+    getSavedPosts({
+      type: categoryTypeMap[activeCategory],
+      page,
+      size: PAGE_SIZE,
+    })
+      .then((res) => {
+        setSavedPosts((prev) =>
+          page === 0 ? res.data.saved : [...prev, ...res.data.saved],
+        );
+        setHasNext(res.data.hasNext);
+      })
+      .catch(() => {
+        setSavedPosts([]);
+        setHasNext(false);
+      });
+  }, [activeCategory, page]);
 
   const handleUnsave = (savedId) => {
     setSavedPosts((prev) => prev.filter((post) => post.savedId !== savedId));
   };
-
-  const filteredPosts = savedPosts.filter((post) => {
-    if (activeCategory === '전체') return true;
-    if (activeCategory === '창업 정보') return post.type === 'POST';
-    if (activeCategory === '팀원 구인') return post.type === 'RECRUITMENT';
-    return true;
-  });
 
   return (
     <div>
@@ -113,22 +131,39 @@ function Community4() {
             label={category}
             fixed={category.length <= 5}
             isActive={activeCategory === category}
-            onClick={() => setActiveCategory(category)}
+            onClick={() => {
+              setPage(0);
+              setActiveCategory(category);
+            }}
           />
         ))}
       </div>
 
       {/* 카드 목록 */}
-      {filteredPosts.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {filteredPosts.map((post) => (
-            <SavedPostCard key={post.savedId} {...post} onUnsave={handleUnsave} />
-          ))}
-        </div>
+      {savedPosts.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            {savedPosts.map((post) => (
+              <SavedPostCard
+                key={post.savedId}
+                {...post}
+                onUnsave={handleUnsave}
+              />
+            ))}
+          </div>
+          {hasNext && (
+            <div className="flex justify-end mt-6 lg:mt-10">
+              <button
+                onClick={() => setPage((prev) => prev + 1)}
+                className="border border-white text-white text-[12px] md:text-[14px] lg:text-[20px] px-8 py-2 rounded-full"
+              >
+                더보기
+              </button>
+            </div>
+          )}
+        </>
       ) : (
-        <p className="text-white-body text-[12px] text-center py-10">
-          저장한 글이 없습니다.
-        </p>
+        <EmptyMessage />
       )}
     </div>
   );

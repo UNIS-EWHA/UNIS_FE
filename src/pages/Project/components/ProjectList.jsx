@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import Tag from '@/components/Tag';
+import CardTag from '@/components/CardTag';
+import EmptyMessage from '@/components/EmptyMessage';
 
 function ProjectCard({ projectId, thumbnailUrl, name, description, techStacks }) {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ function ProjectCard({ projectId, thumbnailUrl, name, description, techStacks })
 
       <div className="flex items-center gap-2 lg:gap-4 flex-wrap">
         {techStacks.map((tech) => (
-          <Tag key={tech} label={tech} />
+          <CardTag key={tech} label={tech} />
         ))}
       </div>
     </div>
@@ -41,11 +42,15 @@ function ProjectCard({ projectId, thumbnailUrl, name, description, techStacks })
 function ProjectList({ projects, hasNext, onLoadMore }) {
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-        {projects.map((project) => (
-          <ProjectCard key={project.projectId} {...project} />
-        ))}
-      </div>
+      {projects.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+          {projects.map((project) => (
+            <ProjectCard key={project.projectId} {...project} />
+          ))}
+        </div>
+      ) : (
+        <EmptyMessage />
+      )}
       {hasNext && (
         <div className="flex justify-end mt-6 lg:mt-10">
           <button

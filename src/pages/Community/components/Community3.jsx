@@ -1,24 +1,23 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/pages/Application/components/ProgressBar';
 import { createCommunityRecruitment } from '@/api/community';
 import { partCodes } from '@/constants/community';
 
-// 수직선 애니메이션 컴포넌트
 function AnimatedDivider({ isVisible }) {
   return (
     <div className="flex justify-center my-8 h-[80px] md:h-[100px] lg:h-[120px]">
       <div
-        className={`w-[1px] transition-none ${isVisible ? 'animate-draw-line' : 'h-0'}`}
+        className={`w-0.5 transition-none ${isVisible ? 'animate-draw-line' : 'h-0'}`}
         style={{
           background:
-            'linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0))',
+            'linear-gradient(to bottom, rgba(22,112,251,0), rgba(22,112,251,0.9))',
         }}
       />
     </div>
   );
 }
 
-// Step1 - 모집 유형 선택
 const recruitTypes = [
   {
     id: 'STARTUP',
@@ -27,20 +26,24 @@ const recruitTypes = [
   },
   {
     id: 'PROJECT',
-    title: '창업팀',
-    description: '스타트업 공동 창업자 / 팀원',
+    title: '프로젝트 팀',
+    description: '사이드 프로젝트 함께할 팀원',
   },
-  { id: 'STUDY', title: '창업팀', description: '스타트업 공동 창업자 / 팀원' },
   {
-    id: 'CONTEST',
-    title: '창업팀',
-    description: '스타트업 공동 창업자 / 팀원',
+    id: 'HACKATHON',
+    title: '해커톤 팀',
+    description: '해커톤 함께할 팀원',
+  },
+  {
+    id: 'STUDY',
+    title: '스터디 팀',
+    description: '스터디 함께할 팀원',
   },
 ];
 
 function RecruitStep1({ selectedType, onSelect }) {
   return (
-    <div className="w-full lg:border lg:border-white/20 lg:rounded-[20px] lg:backdrop-blur-[50px] lg:p-10 flex flex-col gap-6">
+    <div className="w-full flex flex-col gap-6">
       <ProgressBar
         currentStep={1}
         steps={['모집 유형', '상세 정보', '확인 및 제출']}
@@ -62,12 +65,12 @@ function RecruitStep1({ selectedType, onSelect }) {
             onClick={() => onSelect(type.id)}
             className={`w-full flex flex-col items-start px-4 py-3 rounded-[10px] border transition-all duration-200 ${
               selectedType === type.id
-                ? 'border-blue-primary bg-blue-primary/10'
-                : 'border-white/20 bg-white/5'
+                ? 'text-black bg-white'
+                : 'text-white border-white/20'
             }`}
           >
-            <p className="text-white text-[14px] font-[600]">{type.title}</p>
-            <p className="text-white-body text-[12px]">{type.description}</p>
+            <p className="text-[14px] font-[600]">{type.title}</p>
+            <p className="text-[12px]">{type.description}</p>
           </button>
         ))}
       </div>
@@ -75,12 +78,11 @@ function RecruitStep1({ selectedType, onSelect }) {
   );
 }
 
-// Step2 - 상세 정보 입력
 const partOptions = ['기획', '디자인', '프론트엔드', '백엔드'];
 
 function RecruitStep2({ formData, onChange }) {
   return (
-    <div className="w-full lg:border lg:border-white/20 lg:rounded-[20px] lg:backdrop-blur-[50px] lg:p-10 flex flex-col gap-6">
+    <div className="w-full flex flex-col gap-6">
       <ProgressBar
         currentStep={2}
         steps={['모집 유형', '상세 정보', '확인 및 제출']}
@@ -95,36 +97,42 @@ function RecruitStep2({ formData, onChange }) {
         </p>
       </div>
 
-      {/* 제목 */}
       <div className="flex flex-col gap-2">
-        <p className="text-white text-[12px] lg:text-[14px] font-[500]">제목</p>
+        <p className="text-white text-[12px] lg:text-[20px] font-normal">
+          프로젝트명/팀명
+        </p>
         <input
           type="text"
           value={formData.title || ''}
-          onChange={(e) => onChange('title', e.target.value)}
-          placeholder="제목을 입력해주세요."
-          className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none"
+          onChange={(e) => onChange('title', e.target.value.slice(0, 50))}
+          placeholder="팀 또는 프로젝트 이름 (최대 50자)"
+          maxLength={50}
+          className="w-full border border-white rounded-[10px] px-4 py-3 text-white text-[12px] lg:text-[16px] placeholder:text-white-body outline-none"
         />
       </div>
 
-      {/* 내용 */}
       <div className="flex flex-col gap-2">
-        <p className="text-white text-[12px] lg:text-[14px] font-[500]">내용</p>
+        <p className="text-white text-[12px] lg:text-[20px] font-normal">
+          한 줄 소개
+        </p>
         <textarea
           value={formData.content || ''}
-          onChange={(e) => onChange('content', e.target.value)}
-          placeholder="팀에 대해 자세히 설명해주세요."
-          rows={5}
-          className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] placeholder:text-white/50 outline-none resize-none"
+          onChange={(e) => onChange('content', e.target.value.slice(0, 100))}
+          placeholder="연락 방법과 함께 어떤 것을 만드는 팀인지 작성해주세요. (최대 100자)"
+          maxLength={100}
+          rows={2}
+          className="w-full border border-white rounded-[10px] px-4 py-3 text-white text-[12px] lg:text-[16px] placeholder:text-white-body outline-none resize-none"
         />
+        <p className="text-white-body text-[11px] lg:text-[14px] text-right">
+          {(formData.content || '').length}/100
+        </p>
       </div>
 
-      {/* 모집 파트 */}
       <div className="flex flex-col gap-2">
-        <p className="text-white text-[12px] lg:text-[14px] font-[500]">
+        <p className="text-white text-[12px] lg:text-[20px] font-normal">
           모집 파트
         </p>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-4 gap-2 lg:gap-4">
           {partOptions.map((part) => (
             <button
               key={part}
@@ -135,7 +143,7 @@ function RecruitStep2({ formData, onChange }) {
                   : [...current, part];
                 onChange('parts', updated);
               }}
-              className={`px-4 py-2 rounded-[8px] border text-[12px] lg:text-[14px] transition-all duration-200 ${
+              className={`py-2 lg:py-2.5 rounded-[10px] border text-[12px] lg:text-[16px] transition-all duration-200 ${
                 (formData.parts || []).includes(part)
                   ? 'bg-white text-black border-white'
                   : 'bg-transparent text-white border-white/50'
@@ -147,27 +155,30 @@ function RecruitStep2({ formData, onChange }) {
         </div>
       </div>
 
-      {/* 마감일 */}
       <div className="flex flex-col gap-2">
-        <p className="text-white text-[12px] lg:text-[14px] font-[500]">
+        <p className="text-white text-[12px] lg:text-[20px] font-normal">
           마감일
         </p>
         <input
           type="date"
           value={formData.deadline || ''}
           onChange={(e) => onChange('deadline', e.target.value)}
-          className="w-full bg-white/10 border border-white/20 rounded-[8px] px-4 py-3 text-white text-[12px] lg:text-[14px] outline-none"
+          className="w-full border border-white rounded-[10px] px-4 py-3 text-white text-[12px] lg:text-[16px] placeholder:text-white-body outline-none"
         />
       </div>
-
     </div>
   );
 }
 
-// Step3 - 확인 및 제출
-function RecruitStep3({ formData, onBack, onSubmit, isSubmitting, errorMessage }) {
+function RecruitStep3({
+  formData,
+  onBack,
+  onSubmit,
+  isSubmitting,
+  errorMessage,
+}) {
   return (
-    <div className="w-full lg:border lg:border-white/20 lg:rounded-[20px] lg:backdrop-blur-[50px] lg:p-10 flex flex-col gap-6">
+    <div className="w-full flex flex-col gap-6">
       <ProgressBar
         currentStep={3}
         steps={['모집 유형', '상세 정보', '확인 및 제출']}
@@ -182,9 +193,7 @@ function RecruitStep3({ formData, onBack, onSubmit, isSubmitting, errorMessage }
         </p>
       </div>
 
-      {/* 미리보기 카드 */}
       <div className="border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px]">
-        {/* 파트 태그 */}
         <div className="flex items-center gap-2 flex-wrap">
           {(formData.parts || []).map((part) => (
             <span
@@ -194,11 +203,6 @@ function RecruitStep3({ formData, onBack, onSubmit, isSubmitting, errorMessage }
               {part}
             </span>
           ))}
-          {formData.recruitType && (
-            <span className="border border-white/50 text-white text-[12px] px-2 py-1 rounded-full">
-              모집 중
-            </span>
-          )}
         </div>
 
         <p className="text-white text-[14px] font-[600]">
@@ -211,9 +215,6 @@ function RecruitStep3({ formData, onBack, onSubmit, isSubmitting, errorMessage }
         <hr className="border-white/20" />
 
         <div className="flex items-center justify-between">
-          <p className="text-white-body text-[12px]">작성자: 학회원</p>
-        </div>
-        <div className="flex items-center justify-between">
           <p className="text-white-body text-[12px]">2025.04.25</p>
           <p className="text-white-body text-[12px]">
             마감{' '}
@@ -225,7 +226,7 @@ function RecruitStep3({ formData, onBack, onSubmit, isSubmitting, errorMessage }
       </div>
 
       {errorMessage && (
-        <p className="text-red-500 text-[12px] text-center">{errorMessage}</p>
+        <p className="text-red text-[12px] text-center">{errorMessage}</p>
       )}
 
       <div className="flex gap-3">
@@ -248,11 +249,15 @@ function RecruitStep3({ formData, onBack, onSubmit, isSubmitting, errorMessage }
   );
 }
 
-// 메인 Community3
+const LINE_ANIMATION_DURATION = 800;
+
 function Community3() {
+  const navigate = useNavigate();
   const [, setCurrentStep] = useState(1);
   const [showStep2, setShowStep2] = useState(false);
+  const [revealStep2, setRevealStep2] = useState(false);
   const [showStep3, setShowStep3] = useState(false);
+  const [revealStep3, setRevealStep3] = useState(false);
   const [formData, setFormData] = useState({
     recruitType: '',
     title: '',
@@ -263,30 +268,46 @@ function Community3() {
   const [isComplete, setIsComplete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const step2Ref = useRef(null);
-  const step3Ref = useRef(null);
+  const step2SectionRef = useRef(null);
+  const step3SectionRef = useRef(null);
 
   const handleFormChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleStep1Next = () => {
-    if (!formData.recruitType) return;
-    setShowStep2(true);
-    setCurrentStep(2);
-    setTimeout(() => {
-      step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+  const handleSelectRecruitType = (type) => {
+    handleFormChange('recruitType', type);
+    if (!showStep2) {
+      setShowStep2(true);
+      setCurrentStep(2);
+    }
   };
 
   const handleStep2Next = () => {
     if (!formData.title || !formData.content) return;
     setShowStep3(true);
     setCurrentStep(3);
-    setTimeout(() => {
-      step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
   };
+
+  useEffect(() => {
+    if (!showStep2) return undefined;
+    step2SectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+    const id = setTimeout(() => setRevealStep2(true), LINE_ANIMATION_DURATION);
+    return () => clearTimeout(id);
+  }, [showStep2]);
+
+  useEffect(() => {
+    if (!showStep3) return undefined;
+    step3SectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+    const id = setTimeout(() => setRevealStep3(true), LINE_ANIMATION_DURATION);
+    return () => clearTimeout(id);
+  }, [showStep3]);
 
   const handleSubmit = async () => {
     setErrorMessage('');
@@ -311,23 +332,31 @@ function Community3() {
     }
   };
 
-  // Community3 return 부분 수정
   return (
-    <div className="flex flex-col">
-      {isComplete ? (
-        // 완료 화면만
-        <div className="w-full lg:border lg:border-white/20 lg:rounded-[20px] lg:backdrop-blur-[50px] lg:p-10 flex flex-col items-center gap-6 min-h-[300px] justify-center">
-          <ProgressBar
-            currentStep={4}
-            steps={['모집 유형', '상세 정보', '확인 및 제출']}
-          />
+    <div className="px-5 md:px-15 lg:px-45 py-8 lg:py-20">
+      {!isComplete && (
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 text-white-body text-[12px] lg:text-[16px] mb-4"
+        >
+          ← 뒤로가기
+        </button>
+      )}
+      <p className="text-blue-primary text-[12px] lg:text-[24px] font-medium mb-2 lg:mb-4">
+        Community
+      </p>
+      <p className="text-white text-[18px] lg:text-[38px] font-bold mb-8 lg:mb-12">
+        Startup Hub
+      </p>
 
+      {isComplete ? (
+        <div className="w-full lg:max-w-225 mx-auto lg:border lg:border-white/20 lg:rounded-[24px] lg:backdrop-blur-[50px] lg:px-43 lg:py-27.5 flex flex-col items-center gap-6 min-h-100 justify-center">
           <div className="flex flex-col items-center gap-3 text-center">
             <p className="text-white text-[16px] lg:text-[20px] font-[700]">
               구인 글이 등록되었습니다.
             </p>
             <p className="text-white-body text-[12px] lg:text-[14px] leading-[160%]">
-              팀원 모누는 글이 커뮤니티에 등록되었어요.
+              팀원 찾는 글이 커뮤니티에 등록되었어요.
               <br />
               좋은 팀원을 만나실 날을 바랍니다!
             </p>
@@ -344,7 +373,9 @@ function Community3() {
               onClick={() => {
                 setIsComplete(false);
                 setShowStep2(false);
+                setRevealStep2(false);
                 setShowStep3(false);
+                setRevealStep3(false);
                 setCurrentStep(1);
                 setFormData({
                   recruitType: '',
@@ -354,77 +385,76 @@ function Community3() {
                   deadline: '',
                 });
               }}
-              className="w-full py-3 border border-white text-white text-[14px] lg:text-[16px] font-[700] rounded-[8px]"
+              className="w-full py-3 bg-white text-black text-[14px] lg:text-[16px] font-[700] rounded-[8px]"
             >
               다른 구인 글 작성하기
             </button>
           </div>
         </div>
       ) : (
-        // 스텝 화면들
         <>
           <div className="mb-8">
             <p className="text-white text-[16px] lg:text-[24px] font-[700] mb-2">
               팀원 구인
             </p>
             <p className="text-white-body text-[12px] lg:text-[14px]">
-              프로젝트, 창업팀, 해커톤, 스터디 팀원을 찾고 있다면 지금 바로 글을
+              프로젝트, 창업팀, 해커톤, 스터디 팀원을 찾고 있다면 게시글을
               작성하세요.
             </p>
           </div>
 
-          <RecruitStep1
-            selectedType={formData.recruitType}
-            onSelect={(type) => handleFormChange('recruitType', type)}
-          />
+          <div className="w-full lg:max-w-225 mx-auto lg:border lg:border-white/20 lg:rounded-[24px] lg:backdrop-blur-[50px] lg:px-43 lg:py-27.5 flex flex-col gap-6">
+            <RecruitStep1
+              selectedType={formData.recruitType}
+              onSelect={handleSelectRecruitType}
+            />
 
-          {!showStep2 && (
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={handleStep1Next}
-                disabled={!formData.recruitType}
-                className="px-8 py-2 bg-blue-primary text-white text-[14px] font-[700] rounded-[8px] disabled:opacity-50"
-              >
-                다음
-              </button>
-            </div>
-          )}
+            {showStep2 && (
+              <div ref={step2SectionRef}>
+                <AnimatedDivider isVisible={showStep2} />
+                {revealStep2 && (
+                  <div className="animate-fade-up">
+                    <RecruitStep2
+                      formData={formData}
+                      onChange={handleFormChange}
+                    />
+                    {!showStep3 && (
+                      <div className="flex justify-end mt-4">
+                        <button
+                          onClick={handleStep2Next}
+                          disabled={!formData.title || !formData.content}
+                          className="px-8 py-2 bg-blue-primary text-white text-[14px] font-[700] rounded-[8px] disabled:opacity-50"
+                        >
+                          다음
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
-          {showStep2 && <AnimatedDivider isVisible={showStep2} />}
-
-          {showStep2 && (
-            <div ref={step2Ref}>
-              <RecruitStep2 formData={formData} onChange={handleFormChange} />
-              {!showStep3 && (
-                <div className="flex justify-end mt-4">
-                  <button
-                    onClick={handleStep2Next}
-                    disabled={!formData.title || !formData.content}
-                    className="px-8 py-2 bg-blue-primary text-white text-[14px] font-[700] rounded-[8px] disabled:opacity-50"
-                  >
-                    다음
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {showStep3 && <AnimatedDivider isVisible={showStep3} />}
-
-          {showStep3 && (
-            <div ref={step3Ref}>
-              <RecruitStep3
-                formData={formData}
-                onBack={() => {
-                  setShowStep3(false);
-                  setCurrentStep(2);
-                }}
-                onSubmit={handleSubmit}
-                isSubmitting={isSubmitting}
-                errorMessage={errorMessage}
-              />
-            </div>
-          )}
+            {showStep3 && (
+              <div ref={step3SectionRef}>
+                <AnimatedDivider isVisible={showStep3} />
+                {revealStep3 && (
+                  <div className="animate-fade-up">
+                    <RecruitStep3
+                      formData={formData}
+                      onBack={() => {
+                        setShowStep3(false);
+                        setRevealStep3(false);
+                        setCurrentStep(2);
+                      }}
+                      onSubmit={handleSubmit}
+                      isSubmitting={isSubmitting}
+                      errorMessage={errorMessage}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>

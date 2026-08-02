@@ -25,3 +25,10 @@ export const partCodes = {
   프론트엔드: 'FRONTEND',
   백엔드: 'BACKEND',
 };
+
+export const recruitmentTypeLabels = {
+  STARTUP: '창업팀',
+  PROJECT: '프로젝트 팀',
+  HACKATHON: '해커톤 팀',
+  STUDY: '스터디 팀',
+};

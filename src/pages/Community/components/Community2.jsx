@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Tag from '@/components/Tag';
+import CardTag from '@/components/CardTag';
+import EmptyMessage from '@/components/EmptyMessage';
 import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
 import FilledBookmarkIcon from '@/assets/ic_filled_bookmark_40.svg';
 import {
@@ -16,7 +17,6 @@ function RecruitCard({
   title,
   content,
   parts,
-  viewCount,
   createdAt,
   deadline,
   isSaved: initialIsSaved,
@@ -46,7 +46,7 @@ function RecruitCard({
       {/* 파트 태그 - 상단 */}
       <div className="flex items-center gap-2 flex-wrap pr-6">
         {parts.map((part) => (
-          <Tag key={part} label={partLabels[part] ?? part} fixed={false} />
+          <CardTag key={part} label={partLabels[part] ?? part} />
         ))}
       </div>
 
@@ -59,9 +59,6 @@ function RecruitCard({
       </p>
 
       <hr className="border-white/20" />
-
-      {/* 조회수 */}
-      <p className="text-white-body text-[12px]">조회수: {viewCount}</p>
 
       {/* 날짜 / 마감 */}
       <div className="flex items-center justify-between">
@@ -111,26 +108,21 @@ function Community2({ activeCategory, keyword }) {
 
   return (
     <div>
-      <div className="flex justify-end md:mb-5">
-        <button
-          onClick={() => navigate('/community/recruit-write')}
-          className="hidden md:block border border-white text-white text-[16px] px-6 py-2 rounded-full"
-        >
-          게시글 작성
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {recruitments.map((post) => (
-          <RecruitCard key={post.recruitmentId} {...post} />
-        ))}
-      </div>
+      {recruitments.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+          {recruitments.map((post) => (
+            <RecruitCard key={post.recruitmentId} {...post} />
+          ))}
+        </div>
+      ) : (
+        <EmptyMessage />
+      )}
 
       {hasNext && (
-        <div className="flex items-center justify-end mt-6">
+        <div className="flex justify-end mt-6 lg:mt-10">
           <button
             onClick={() => setPage((prev) => prev + 1)}
-            className="border border-white text-white text-[12px] lg:text-[20px] px-8 py-2 rounded-full"
+            className="border border-white text-white text-[12px] md:text-[14px] lg:text-[20px] px-8 py-2 rounded-full"
           >
             더보기
           </button>

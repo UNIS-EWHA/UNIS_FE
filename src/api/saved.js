@@ -1,3 +1,4 @@
 import api from "@/api/instance";
 
-export const getSavedPosts = () => api.get("/saved");
+export const getSavedPosts = ({ type, page, size } = {}) =>
+  api.get("/saved", { params: { type, page, size } });

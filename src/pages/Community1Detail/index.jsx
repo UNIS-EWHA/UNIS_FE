@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Tag from '@/components/Tag';
 import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
@@ -11,6 +11,7 @@ import { categoryLabels } from '@/constants/community';
 
 function Community1Detail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [notFound, setNotFound] = useState(false);
 
@@ -47,20 +48,31 @@ function Community1Detail() {
     isSaved,
   } = post;
 
-  const dDayLabel = dDay <= 0 ? '마감' : `D-${dDay}`;
+  const dDayLabel =
+    dDay === null || dDay === undefined
+      ? null
+      : dDay <= 0
+        ? '마감'
+        : `D-${dDay}`;
 
   const infoRows = [
-    organizer && { label: '주최기관', value: organizer },
-    (startDate || endDate) && {
+    { label: '주최기관', value: organizer || '미기재' },
+    {
       label: '기간',
       value: `${startDate ?? '미정'} ~ ${endDate ?? '미정'}`,
     },
-    deadline && { label: '마감', value: deadline },
+    { label: '마감', value: deadline || '미정' },
     ...tags.map((tag) => ({ label: tag.label, value: tag.content })),
-  ].filter(Boolean);
+  ];
 
   return (
     <div className="w-full mx-auto px-5 md:px-15 lg:px-45 py-8 lg:py-14">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 text-white-body text-[12px] lg:text-[16px] mb-4 lg:mb-8"
+      >
+        ← 뒤로가기
+      </button>
       <div className="flex items-center justify-between mb-4 lg:mb-8">
         <p className="text-white text-[16px] md:text-[20px] lg:text-[32px] font-[700]">
           {title}
@@ -75,7 +87,7 @@ function Community1Detail() {
 
       <div className="flex items-center gap-2 flex-wrap mb-4 lg:mb-10">
         <Tag label={categoryLabels[category] ?? category} />
-        <Tag label={dDayLabel} />
+        {dDayLabel && <Tag label={dDayLabel} />}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-20">
@@ -114,23 +126,25 @@ function Community1Detail() {
             </div>
           </div>
 
-          <hr className="border-white-body" />
+          {externalUrl && (
+            <>
+              <hr className="border-white-body" />
 
-          <div>
-            <p className="text-white text-[16px] lg:text-[28px] font-[700] mb-3 lg:mb-6">
-              자세한 정보 확인하기
-            </p>
-            {externalUrl && (
-              <a
-                href={externalUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full py-2 lg:py-3 text-center text-black bg-white rounded-[8px] text-[14px] lg:text-[20px] font-[700] block"
-              >
-                Link
-              </a>
-            )}
-          </div>
+              <div>
+                <p className="text-white text-[16px] lg:text-[28px] font-[700] mb-3 lg:mb-6">
+                  자세한 정보 확인하기
+                </p>
+                <a
+                  href={externalUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full py-2 lg:py-3 text-center text-black bg-white rounded-[8px] text-[14px] lg:text-[20px] font-[700] block"
+                >
+                  Link
+                </a>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

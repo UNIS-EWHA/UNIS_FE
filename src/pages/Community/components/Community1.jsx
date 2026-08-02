@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Tag from '@/components/Tag';
+import CardTag from '@/components/CardTag';
+import EmptyMessage from '@/components/EmptyMessage';
 import { categoryLabels } from '@/constants/community';
 import { toggleCommunityPostSave } from '@/api/community';
 import BookmarkIcon from '@/assets/ic_bookmark_40.svg';
@@ -20,7 +21,12 @@ function PostCard({
 }) {
   const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(initialIsSaved);
-  const dDayLabel = dDay <= 0 ? '마감' : `D-${dDay}`;
+  const dDayLabel =
+    dDay === null || dDay === undefined
+      ? null
+      : dDay <= 0
+        ? '마감'
+        : `D-${dDay}`;
 
   const handleToggleSave = async (e) => {
     e.stopPropagation();
@@ -35,32 +41,38 @@ function PostCard({
   return (
     <div
       onClick={() => navigate(`/community/${postId}`)}
-      className="relative border border-white/20 rounded-[10px] p-4 flex flex-col gap-3 backdrop-blur-[50px] cursor-pointer"
+      className="relative border border-white/20 rounded-[10px] p-4 lg:p-6 flex flex-col gap-3 lg:gap-4 backdrop-blur-[50px] cursor-pointer"
     >
       <img
         src={isSaved ? FilledBookmarkIcon : BookmarkIcon}
         alt="bookmark"
         onClick={handleToggleSave}
-        className="absolute top-4 right-4 w-4 h-4 lg:w-5 lg:h-5 cursor-pointer"
+        className="absolute top-4 right-4 lg:top-6 lg:right-6 w-4 h-4 lg:w-5 lg:h-5 cursor-pointer"
       />
       <div className="flex items-center gap-2 pr-6">
-        <Tag label={categoryLabels[category] ?? category} />
-        <Tag label={dDayLabel} />
+        <CardTag label={categoryLabels[category] ?? category} />
+        {dDayLabel && <CardTag label={dDayLabel} />}
       </div>
-      <p className="text-white text-[14px] font-[600]">{title}</p>
-      <p className="text-white-body text-[12px] font-[400] leading-[160%] line-clamp-2">
+      <p className="text-white text-[14px] lg:text-[18px] font-[600]">
+        {title}
+      </p>
+      <p className="text-white-body text-[12px] lg:text-[14px] font-[400] leading-[160%] line-clamp-2">
         {content}
       </p>
       <hr className="border-white/20" />
       <div className="flex items-center justify-between">
-        <p className="text-white-body text-[12px]">출처: {organizer}</p>
-        <p className="text-white-body text-[12px]">조회수: {viewCount}</p>
+        <p className="text-white-body text-[12px] lg:text-[14px]">
+          출처: {organizer || '미기재'}
+        </p>
+        <p className="text-white-body text-[12px] lg:text-[14px]">
+          조회수: {viewCount}
+        </p>
       </div>
       <div className="flex items-center justify-between">
-        <p className="text-white-body text-[12px]">
+        <p className="text-white-body text-[12px] lg:text-[14px]">
           {createdAt?.slice(0, 10).replaceAll('-', '.')}
         </p>
-        <p className="text-white-body text-[12px]">
+        <p className="text-white-body text-[12px] lg:text-[14px]">
           마감 {deadline ? deadline.replaceAll('-', '.') : '미정'}
         </p>
       </div>
@@ -72,25 +84,21 @@ function Community1({ posts, hasNext, onLoadMore }) {
   const navigate = useNavigate();
   return (
     <div>
-      <div className="flex justify-end md:mb-5">
-        <button
-          onClick={() => navigate('/community/write')}
-          className="hidden md:block border border-white text-white text-[16px] px-6 py-2 rounded-full"
-        >
-          게시글 작성
-        </button>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {posts.map((post) => (
-          <PostCard key={post.postId} {...post} />
-        ))}
-      </div>
+      {posts.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+          {posts.map((post) => (
+            <PostCard key={post.postId} {...post} />
+          ))}
+        </div>
+      ) : (
+        <EmptyMessage />
+      )}
 
       {hasNext && (
-        <div className="flex items-center justify-end mt-6">
+        <div className="flex justify-end mt-6 lg:mt-10">
           <button
             onClick={onLoadMore}
-            className="border border-white text-white text-[12px] lg:text-[20px] px-8 py-2 rounded-full"
+            className="border border-white text-white text-[12px] md:text-[14px] lg:text-[20px] px-8 py-2 rounded-full"
           >
             더보기
           </button>

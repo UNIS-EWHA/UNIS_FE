@@ -1,6 +1,6 @@
 import Tag from '@/components/Tag';
 
-const tags = ['전체', '7기', '6기', '5기', '4기', '3기', '2기', '1기'];
+const tags = ['전체', '7기', '6기'];
 
 function GenerationFilter({ selected, onSelect }) {
   return (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from '@/components/SearchBar';
 import Tag from '@/components/Tag';
 import Community1 from './components/Community1';
@@ -19,6 +20,7 @@ const categoryMap = {
 const PAGE_SIZE = 8;
 
 function Community() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('창업 정보 공유');
   const [activeCategory, setActiveCategory] = useState('전체');
   const [searchInput, setSearchInput] = useState('');
@@ -48,7 +50,6 @@ function Community() {
       });
   }, [activeTab, activeCategory, keyword, page]);
 
-  // 탭 바뀌면 카테고리 초기화
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setActiveCategory('전체');
@@ -76,22 +77,22 @@ function Community() {
 
   return (
     <>
-      <div className="px-5 md:px-15 lg:px-45 py-8">
-        <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2">
+      <div className="px-5 md:px-15 lg:px-45 py-8 lg:py-14">
+        <p className="text-blue-primary text-[12px] lg:text-[24px] font-medium mb-4">
           Community
         </p>
-        <p className="text-white text-[18px] lg:text-[38px] font-[700] mb-6 lg:mb-10">
+        <p className="text-white text-[18px] lg:text-[38px] font-bold mb-6 lg:mb-20">
           창업 정보 게시판
         </p>
 
-        <div className="flex items-center border-b border-white/20 mb-4 lg:mb-6">
+        <div className="flex items-center border-b border-white/20 mb-4 lg:mb-14">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => handleTabChange(tab)}
-              className={`text-[12px] lg:text-[20px] font-[500] pb-2 mr-6 border-b-2 transition-all duration-200 ${
+              className={`text-[12px] lg:text-[24px] font-medium pb-4 mr-6 border-b-2 transition-all duration-200 ${
                 activeTab === tab
-                  ? 'text-white border-white'
+                  ? 'text-blue-mint border-blue-mint'
                   : 'text-white-body border-transparent'
               }`}
             >
@@ -100,7 +101,7 @@ function Community() {
           ))}
         </div>
 
-        <div className="mb-4 lg:mb-6">
+        <div className="mb-4 lg:mb-8">
           <SearchBar
             placeholder="검색어를 입력해주세요."
             value={searchInput}
@@ -113,19 +114,35 @@ function Community() {
         </div>
 
         {categoryMap[activeTab].length > 0 && (
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-4 lg:mb-8">
-            {categoryMap[activeTab].map((category) => (
-              <Tag
-                key={category}
-                label={category}
-                fixed={category.length <= 5}
-                isActive={activeCategory === category}
-                onClick={() => {
-                  setPage(0);
-                  setActiveCategory(category);
-                }}
-              />
-            ))}
+          <div className="flex items-center justify-between gap-4 mb-4 lg:mb-20">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+              {categoryMap[activeTab].map((category) => (
+                <Tag
+                  key={category}
+                  label={category}
+                  fixed={category.length <= 5}
+                  isActive={activeCategory === category}
+                  onClick={() => {
+                    setPage(0);
+                    setActiveCategory(category);
+                  }}
+                />
+              ))}
+            </div>
+            {(activeTab === '창업 정보 공유' || activeTab === '팀원 구인') && (
+              <button
+                onClick={() =>
+                  navigate(
+                    activeTab === '창업 정보 공유'
+                      ? '/community/write'
+                      : '/community/recruit-write'
+                  )
+                }
+                className="hidden md:block shrink-0 border border-blue-mint text-blue-mint text-[12px] px-3 py-1 rounded-[20px] lg:text-[20px] lg:px-7.5 lg:py-2 rounded-[40px] font-bold"
+              >
+                게시글 작성
+              </button>
+            )}
           </div>
         )}
 
