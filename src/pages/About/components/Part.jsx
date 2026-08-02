@@ -1,5 +1,6 @@
 import useEmblaCarousel from 'embla-carousel-react';
 import { useState, useEffect } from 'react';
+import useInView from '@/hooks/useInView';
 import PlanningIcon from '@/assets/ic_planning.svg';
 import DesignIcon from '@/assets/ic_design.svg';
 import FrontendIcon from '@/assets/ic_frontend.svg';
@@ -48,6 +49,7 @@ function Part({ parts }) {
     containScroll: false,
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { ref, isVisible } = useInView();
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -57,7 +59,10 @@ function Part({ parts }) {
   }, [emblaApi]);
 
   return (
-    <div className="pl-5 md:pl-15 lg:pl-45">
+    <div
+      ref={ref}
+      className={`pl-5 md:pl-15 lg:pl-45 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
+    >
       <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] lg:font-[500] leading-normal tracking-[0%] mb-2 lg:mb-4">
         Parts
       </p>

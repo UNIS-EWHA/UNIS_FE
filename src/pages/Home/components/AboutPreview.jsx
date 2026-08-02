@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import UnisIcon from '@/assets/ic_unis_logo_48.svg';
+import useInView from '@/hooks/useInView';
 
 const features = [
   {
@@ -37,9 +38,13 @@ function FeatureCard({ icon, title, description }) {
 
 function AboutPreview() {
   const navigate = useNavigate();
+  const { ref, isVisible } = useInView();
 
   return (
-    <div className="px-5 md:px-15 lg:px-45">
+    <div
+      ref={ref}
+      className={`px-5 md:px-15 lg:px-45 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
+    >
       <div className="flex items-start justify-between mb-4 md:mb-6 lg:mb-8">
         <div>
           <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2 md:mb-3 lg:mb-4">

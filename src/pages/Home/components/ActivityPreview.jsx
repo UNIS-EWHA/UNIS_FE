@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import useInView from '@/hooks/useInView';
 import ActivityImg1 from '@/assets/img_activity_preview_1.png';
 import ActivityImg2 from '@/assets/img_activity_preview_2.png';
 import ActivityImg3 from '@/assets/img_activity_preview_3.png';
@@ -47,9 +48,13 @@ function ActivityCard({ image, title, description }) {
 
 function ActivityPreview() {
   const navigate = useNavigate();
+  const { ref, isVisible } = useInView();
 
   return (
-    <div className="px-5 md:px-15 lg:px-45">
+    <div
+      ref={ref}
+      className={`px-5 md:px-15 lg:px-45 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
+    >
       <div className="flex items-start justify-between mb-6 md:mb-8 lg:mb-10">
         <div>
           <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2 md:mb-3 lg:mb-4">

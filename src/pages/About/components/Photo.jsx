@@ -1,3 +1,5 @@
+import useInView from '@/hooks/useInView';
+
 function PhotoCard({ title, image }) {
   return (
     <div className="w-full border border-white/20 rounded-[10px] ronded-[20px] overflow-hidden relative">
@@ -15,8 +17,13 @@ function PhotoCard({ title, image }) {
 }
 
 function Photo({ photos }) {
+  const { ref, isVisible } = useInView();
+
   return (
-    <div className="px-5 md:px-15 lg:px-45">
+    <div
+      ref={ref}
+      className={`px-5 md:px-15 lg:px-45 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
+    >
       <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] lg:font-[500] leading-normal tracking-[0%] mb-2 lg:mb-4">
         Photo
       </p>

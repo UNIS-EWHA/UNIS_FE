@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { getHomeStats } from '@/api/home';
+import useInView from '@/hooks/useInView';
 
 function useCountUp(target, duration = 2500) {
   const startValue = Math.floor(target * 0.8);
@@ -63,6 +64,7 @@ function StatCard({ number, label }) {
 
 function Stats() {
   const [stats, setStats] = useState(null);
+  const { ref, isVisible } = useInView();
 
   useEffect(() => {
     getHomeStats()
@@ -70,24 +72,31 @@ function Stats() {
       .catch(() => setStats(null));
   }, []);
 
-  if (!stats) return null;
-
-  const statCards = [
-    { number: `${stats.memberCount}+`, label: '누적 학회원' },
-    { number: `${stats.projectCount}+`, label: '프로젝트' },
-    { number: `${stats.awardCount}+`, label: '수상 성과' },
-  ];
+  const statCards = stats
+    ? [
+        { number: `${stats.memberCount}+`, label: '누적 학회원' },
+        { number: `${stats.projectCount}+`, label: '프로젝트' },
+        { number: `${stats.awardCount}+`, label: '수상 성과' },
+      ]
+    : [];
 
   return (
-    <div className="px-5 md:px-15 lg:px-45">
-      <p className="text-white text-[16px] md:text-[24px] lg:text-[38px] font-[700] mb-6 md:mb-8 lg:mb-10">
-        {stats.generation}기수 활동 기록
-      </p>
-      <div className="grid grid-cols-3 gap-4 md:gap-5 lg:gap-6">
-        {statCards.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
-        ))}
-      </div>
+    <div
+      ref={ref}
+      className={`px-5 md:px-15 lg:px-45 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
+    >
+      {stats && (
+        <>
+          <p className="text-white text-[16px] md:text-[24px] lg:text-[38px] font-[700] mb-6 md:mb-8 lg:mb-10">
+            {stats.generation}기수 활동 기록
+          </p>
+          <div className="grid grid-cols-3 gap-4 md:gap-5 lg:gap-6">
+            {statCards.map((stat) => (
+              <StatCard key={stat.label} {...stat} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

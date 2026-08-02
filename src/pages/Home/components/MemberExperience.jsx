@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getHomeTestimonials } from '@/api/home';
+import useInView from '@/hooks/useInView';
 
 function StoryCard({ name, role, content }) {
   return (
@@ -19,6 +20,7 @@ function StoryCard({ name, role, content }) {
 
 function MemberExperience() {
   const [stories, setStories] = useState([]);
+  const { ref, isVisible } = useInView();
 
   useEffect(() => {
     getHomeTestimonials()
@@ -27,7 +29,10 @@ function MemberExperience() {
   }, []);
 
   return (
-    <div className="px-5 md:px-15 lg:px-45">
+    <div
+      ref={ref}
+      className={`px-5 md:px-15 lg:px-45 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`}
+    >
       <p className="text-blue-primary text-[12px] lg:text-[24px] font-[400] mb-2 md:mb-3 lg:mb-4">
         Member Experience
       </p>
