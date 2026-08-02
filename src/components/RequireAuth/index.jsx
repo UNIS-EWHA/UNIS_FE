@@ -7,7 +7,12 @@ function RequireAuth({ children }) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   if (!isLoggedIn) {
-    return <AuthRequiredModal onClose={() => navigate('/')} />;
+    return (
+      <>
+        {children}
+        <AuthRequiredModal onClose={() => navigate('/')} />
+      </>
+    );
   }
 
   return children;

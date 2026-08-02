@@ -57,9 +57,6 @@ instance.interceptors.response.use(
         return instance(originalRequest);
       } catch (reissueError) {
         useAuthStore.getState().clearAuth();
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login';
-        }
         return Promise.reject(reissueError);
       }
     }
