@@ -55,7 +55,7 @@ function StatCard({ number, label }) {
         {count}
         {suffix}
       </p>
-      <p className="text-white-body text-[8px] md:text-[16px] lg:text-[20px] font-[400]">
+      <p className="text-white-body text-[12px] md:text-[16px] lg:text-[20px] font-[400]">
         {label}
       </p>
     </div>
@@ -90,7 +90,7 @@ function Stats() {
           <p className="text-white text-[16px] md:text-[24px] lg:text-[38px] font-[700] mb-6 md:mb-8 lg:mb-10">
             {stats.generation}기수 활동 기록
           </p>
-          <div className="grid grid-cols-3 gap-4 md:gap-5 lg:gap-6">
+          <div className="flex flex-col md:grid md:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
             {statCards.map((stat) => (
               <StatCard key={stat.label} {...stat} />
             ))}
