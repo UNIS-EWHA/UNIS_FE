@@ -17,7 +17,7 @@ function Login() {
     setErrorMessage('');
 
     if (!id || !password) {
-      setErrorMessage('아이디와 비밀번호를 입력해주세요.');
+      setErrorMessage('학번과 비밀번호를 입력해주세요.');
       return;
     }
 
@@ -64,7 +64,7 @@ function Login() {
             className="w-full border border-white rounded-[10px] px-4 lg:px-6 py-3 text-white text-[12px] lg:text-[20px] placeholder:text-white-body outline-none"
           />
         </div>
-        <div className="flex flex-col gap-2 lg:gap-4">
+        <div className="flex flex-col mt-8 gap-2 lg:gap-4">
           <p className="text-white text-[12px] lg:text-[20px] font-normal">
             비밀번호
           </p>
