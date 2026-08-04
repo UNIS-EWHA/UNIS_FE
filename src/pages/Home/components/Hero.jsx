@@ -84,13 +84,13 @@ function Hero() {
       </div>
       <div
         ref={lineRef}
-        className="flex justify-center mt-16 h-[150px] md:h-[250px] lg:h-[400px]"
+        className="flex justify-center mt-16 mb-10 md:mb-14 lg:mb-20 h-[150px] md:h-[250px] lg:h-[400px]"
       >
         <div
-          className={`w-[1px] ${isVisible ? 'animate-draw-line' : 'h-0'}`}
+          className={`w-0.5 transition-none ${isVisible ? 'animate-hero-draw-line' : 'h-0'}`}
           style={{
             background:
-              'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.3))',
+              'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.9))',
           }}
         />
       </div>

@@ -265,3 +265,40 @@ body {
     animation: drawLine 0.8s ease-out forwards;
   }
 }
+
+@keyframes heroDrawLine {
+  from {
+    height: 0;
+  }
+  to {
+    height: 150px;
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes heroDrawLine {
+    from {
+      height: 0;
+    }
+    to {
+      height: 250px;
+    }
+  }
+}
+
+@media (min-width: 1510px) {
+  @keyframes heroDrawLine {
+    from {
+      height: 0;
+    }
+    to {
+      height: 400px;
+    }
+  }
+}
+
+@layer utilities {
+  .animate-hero-draw-line {
+    animation: heroDrawLine 0.8s ease-out forwards;
+  }
+}
