@@ -11,7 +11,7 @@ function Button({ name, color, onClick, disabled }) {
       onClick={onClick}
       disabled={disabled}
       style={{ borderColor: color, color: color }}
-      className="flex items-center justify-center min-w-[118px] px-4 h-10 border-2 font-pretendard text-[20px] font-[500] leading-[130%] rounded-[24px] disabled:opacity-50 disabled:cursor-not-allowed"
+      className="flex items-center justify-center min-w-[118px] px-4 py-2 border-2 font-pretendard text-[20px] font-[500] leading-[130%] rounded-[24px] disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {name}
     </button>
