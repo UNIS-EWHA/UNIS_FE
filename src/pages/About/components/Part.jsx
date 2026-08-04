@@ -8,17 +8,17 @@ import BackendIcon from '@/assets/ic_backend.svg';
 
 function PartCard({ icon, title, description, tags }) {
   return (
-    <div className="w-full h-[270px] md:h-[300px] lg:h-[450px] flex flex-col items-center gap-6 backdrop-blur-[50px] border border-white/20 rounded-[10px] lg:rounded-[20px] p-6 lg:p-10">
+    <div className="w-full min-h-[270px] md:min-h-[300px] lg:min-h-[450px] flex flex-col items-center gap-6 backdrop-blur-[50px] border border-white/20 rounded-[10px] lg:rounded-[20px] p-6 lg:p-10">
       <img
         src={icon}
         alt="icon"
-        className="w-6 h-6 md:w-4 md:h-auto lg:w-[30px] lg:h-auto"
+        className="w-6 h-6 md:w-4 md:h-4 lg:w-[30px] lg:h-[30px]"
       />
       <p className="text-white text-[16px] lg:text-[28px] font-[600] lg:font-[700] leading-[150%] text-center line-clamp-1">
         {title}
       </p>
 
-      <p className="text-white-body text-[12px] lg:text-[20px] font-[400] leading-[160%] line-clamp-3">
+      <p className="text-white-body text-[12px] lg:text-[20px] font-[400] leading-[160%]">
         {description}
       </p>
 
